@@ -10,7 +10,7 @@ class RateSaverJob {
     static curNames = ['USD','EUR','GBP','RUB','AMD']
 
     static triggers = {
-        cron name:   'cronTrigger',   startDelay: 100, cronExpression: '0 42 19 * * ? *'
+        cron name:   'cronTrigger',   startDelay: 100, cronExpression: '0 49 23 * * ? *'
     }
     @Transactional
     def execute(){
