@@ -33,7 +33,7 @@
         </div>
         <div class="form-group">
             <label for="birthDate">Birth Date</label><br>
-            <input type="date" class="form-control" placeholder="Enter Birth Date" name="birthDate" value="${current.birthDate}"><br>
+            <input type="date" class="form-control" placeholder="Enter Birth Date" name="birthDate" value="<g:formatDate format="yyyy-mm-dd" date="${current.birthDate}"/>"><br>
         </div>
         <div class="form-group">
             <label for="mobile">Mobile</label><br>
@@ -59,9 +59,8 @@
             <label for="postalCode">Postal Code</label><br>
             <input type="text" class="form-control" placeholder="Enter Postal Code" name="postalCode" value="${current.address.postalCode}"><br>
         </div>
-%{--        <input type="button" value="Update" class="btn btn-primary" onclick="updateUser()">--}%
         <button class="btn btn-primary" type="submit">Update</button>
-        <input type="button" value="Cancel" class="btn btn-danger" onclick="location.href='../home/home'">
+        <g:link controller="home" action="home"><input type="button" value="Cancel" class="btn btn-danger"></g:link>
     </div>
 </g:form>
 </body>

@@ -6,43 +6,38 @@ import grailstestapp.dto.user.UserRequestModel
 import grailstestapp.dto.user.UserResponseModel
 import org.springframework.web.bind.annotation.RequestBody
 
+@Secured('permitAll')
 class UserController {
     def userService
     SpringSecurityService springSecurityService
-//    @Secured('permitAll')
-//    def add(@RequestBody UserRequestModel requestModel){
-//        def addedUser = userService.add(requestModel)
-//        render view:'home'
-//    }
-    @Secured('permitAll')
     def add(){
-        User currentUser = springSecurityService.currentUser as User
         def addedUser = userService.add(params)
-        render view:'../home/home', model: [current: currentUser]
+        if(addedUser!=null){
+            redirect(controller: "login", action: "auth")
+        }
     }
-    @Secured('permitAll')
     def register(){
         if((springSecurityService.currentUser as User)!=null)
             redirect(controller: "home", action: "home")
     }
-    @Secured('permitAll')
+    @Secured('ROLE_USER')
     def updateUser(){
         User currentUser = springSecurityService.currentUser as User
         def updatedUser = userService.update(params)
         render view:'../home/home', model: [current: currentUser]
     }
-    @Secured('permitAll')
+    @Secured('ROLE_USER')
     def updateUserPassword(){
         User currentUser = springSecurityService.currentUser as User
         def updatedUserPassword = userService.updatePassword(params)
         render view:'../home/home', model: [current: currentUser]
     }
-    @Secured('permitAll')
+    @Secured('ROLE_USER')
     def update(){
         User currentUser = springSecurityService.currentUser as User
         render view: 'update', model: [current:currentUser]
     }
-    @Secured('permitAll')
+    @Secured('ROLE_USER')
     def updatePassword(){
 
     }

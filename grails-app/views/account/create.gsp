@@ -13,7 +13,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Create Account</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <asset:javascript src="create-account.js"></asset:javascript>
 </head>
 
 <body>
@@ -34,7 +33,7 @@
     <br>
 %{--    <input type="button" value="Create" class="btn btn-primary" onclick="createAccount()">--}%
     <button type="submit" class="btn btn-primary">Create</button>
-    <input type="button" value="Cancel" class="btn btn-danger" onclick="location.href='../../home/home'">
+    <g:link controller="account" action="userAccounts"><input type="button" value="Cancel" class="btn btn-danger"></g:link>
 </div>
 </g:form>
 </body>

@@ -13,6 +13,7 @@
     <asset:stylesheet href="home.css"></asset:stylesheet>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <asset:javascript src="home.js"></asset:javascript>
+    <asset:javascript src="jquery-3.3.1.min.js"></asset:javascript>
     <g:layoutHead/>
 </head>
 
@@ -23,23 +24,24 @@
         <div class="container">
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item"><input type="button" class="btn btn-dark" value="My Page" onclick="location.href='../home/home'"></li>
+                    <li class="nav-item"><g:link controller="home" action="home"><input type="button" class="btn btn-dark" value="My Page"></g:link></li>
                     <sec:ifAnyGranted roles="ROLE_USER">
-                        <li class="nav-item"><input type="button" name="secondInNav" class="btn btn-dark" value="Accounts" onclick="location.href='../account/userAccounts'"></li>
+                        <li class="nav-item"><g:link controller="account" action="userAccounts"><input type="button" name="secondInNav" class="btn btn-dark" value="Accounts"></g:link></li>
                     </sec:ifAnyGranted>
                     <sec:ifAnyGranted roles="ROLE_ADMIN">
-                        <li class="nav-item"><input type="button" name="secondInNav" class="btn btn-dark" value="Users" onclick=""></li>
+                        <li class="nav-item"><g:link controller="admin" action="users"><input type="button" name="secondInNav" class="btn btn-dark" value="Users"></g:link></li>
                     </sec:ifAnyGranted>
                     <sec:ifAnyGranted roles="ROLE_USER">
-                        <li class="nav-item"><input type="button" name="thirdInNav" class="btn btn-dark" value="Transactions" onclick="location.href='../transaction/userTransactions'"></li>
+                        <li class="nav-item"><g:link controller="transaction" action="userTransactions"><input type="button" name="thirdInNav" class="btn btn-dark" value="Transactions"></g:link></li>
                     </sec:ifAnyGranted>
                     <sec:ifAnyGranted roles="ROLE_ADMIN">
-                        <li class="nav-item"><input type="button" name="thirdInNav" class="btn btn-dark" value="Account Requests"></li>
+                        <li class="nav-item"><g:link controller="admin" action="accountRequests"><input type="button" name="thirdInNav" class="btn btn-dark" value="Account Requests"></g:link></li>
                     </sec:ifAnyGranted>
                     <sec:ifAnyGranted roles="ROLE_ADMIN">
-                        <li class="nav-item"><input type="button" name="fourthInNav" class="btn btn-dark" value="Transaction Requests"></li>
+                        <li class="nav-item"><g:link controller="admin" action="transactionRequests"><input type="button" name="fourthInNav" class="btn btn-dark" value="Transaction Requests"></g:link></li>
                     </sec:ifAnyGranted>
-                    <li class="nav-item"><input type="button" class="btn btn-dark" value="Log Out" onclick="logout()"></li>
+                    <li class="nav-item"><g:link controller="logout" action="logout"><input type="button" class="btn btn-dark" value="Log Out"></g:link></li>
+
                 </ul>
             </div>
         </div>

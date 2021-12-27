@@ -65,7 +65,8 @@
             </div>
 %{--            <input type="button" value="Register" class="btn btn-success" onclick="register()"><br>--}%
             <button type="submit" class="btn btn-success">Register</button>
-            <small>Already have an account? <a class="text-decoration-none" href="../login/auth">Log In</a></small>
+            <br>
+            <small>Already have an account? <g:link controller="login" action="auth">Log In</g:link></small>
             <div class="alert alert-danger" role="alert" style="display: none;" id='myAlert'>
 
             </div>

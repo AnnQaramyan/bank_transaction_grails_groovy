@@ -15,8 +15,8 @@
 </head>
 
 <body>
-<div id="mainDiv" style="width: 80%">
-    <input type="button" class="btn btn-warning" value="Create Account" onclick="location.href='../account/create'">
+<div id="mainDiv" style="width: 99%">
+    <g:link controller="account" action="create"><input type="button" class="btn btn-warning" value="Create Account"></g:link>
     <table class="table table-bordered table-hover">
         <thead>
         <tr>
@@ -34,20 +34,40 @@
             <tr>
                 <td>${currentItem.number}</td>
                 <td>${currentItem.currency}</td>
-                <td>${currentItem.dateCreated}</td>
-                <td>${currentItem.lastUpdated}</td>
+                <td><g:formatDate format="yyyy-MM-dd HH:mm:ss" date="${currentItem.dateCreated}"/></td>
+                <td><g:formatDate format="yyyy-MM-dd HH:mm:ss" date="${currentItem.lastUpdated}"/></td>
                 <td>${currentItem.status}</td>
-                <td>${currentItem.isActive}</td>
-                <td>${balanceList[index]}</td>
+                <g:if test="${currentItem.isActive}">
+                    <td>Active</td>
+                </g:if>
+                <g:else>
+                    <td>Inactive</td>
+                </g:else>
+                <g:if test="${currentItem.status== grailstestapp.Status.ACCEPTED}">
+                    <td>${balanceList[index]}</td>
+                </g:if>
+                <g:else>
+                    <td></td>
+                </g:else>
                 <g:if test="${currentItem.status == grailstestapp.Status.PENDING}">
                     <td>
-                        <input type="button" class="btn btn-info" value="Update" onclick="location.href=''">
+                        <g:link controller="account" action="update"><input type="button" class="btn btn-info" onclick="accountUpdateButtonEvent('${currentItem.number}','${currentItem.currency}')" value="Update"></g:link>
                     </td>
+                    <g:if test="${currentItem.isActive}">
+                        <td>
+                            <input type="button" class="btn btn-danger" value="Deactivate"
+                                   onclick="deactivateAccount('${currentItem.id}',this)">
+                        </td>
+                    </g:if>
+                    <g:else>
+                        <td>
+                            <input type="button" class="btn btn-success" value="Activate"
+                                   onclick="activateAccount('${currentItem.id}',this)">
+                        </td>
+                    </g:else>
+
                 </g:if>
 
-                <td>
-
-                </td>
             </tr>
         </g:each>
         </tbody>

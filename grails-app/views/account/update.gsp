@@ -21,7 +21,7 @@
     <h2>Update Account</h2>
     <div class="form-group">
         <label for="number">Number</label><br>
-        <input type="text" class="form-control" placeholder="Enter Account Number" name="number" value="${}" disabled><br>
+        <input type="text" class="form-control" placeholder="Enter Account Number" name="number" readonly><br>
     </div>
     <div class="form-group">
         <label for="currencies">Currency</label><br>
@@ -36,9 +36,18 @@
     <br>
 %{--    <input type="button" value="Update" class="btn btn-primary" onclick="updateAccount()">--}%
     <button class="btn btn-primary" type="submit">Update</button>
-    <input type="button" value="Cancel" class="btn btn-danger" onclick="location.href='../home/home'">
+    <g:link controller="account" action="userAccounts"><input type="button" value="Cancel" class="btn btn-danger"></g:link>
 
 </div>
 </g:form>
+<script type="text/javascript">
+    window.onload = ()=>{
+        let accNum = document.getElementsByName('number')[0];
+        accNum.value = localStorage.getItem('accNumber');
+        let currency = document.getElementsByName('currencies')[0];
+        currency.value = localStorage.getItem('accCurrency');
+
+    }
+</script>
 </body>
 </html>

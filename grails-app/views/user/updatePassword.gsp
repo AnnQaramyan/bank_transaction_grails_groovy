@@ -31,9 +31,8 @@
         <label for="confirmPass">Confirmation</label><br>
         <input type="password" class="form-control" placeholder="Confirm Your New Password" name="confirmPass"><br>
     </div>
-%{--    <input type="button" value="Update" class="btn btn-primary" onclick="updatePassword()">--}%
     <button class="btn btn-primary" type="submit">Update</button>
-    <input type="button" value="Cancel" class="btn btn-danger" onclick="location.href='../home/home'">
+    <g:link controller="home" action="home"><input type="button" value="Cancel" class="btn btn-danger"></g:link>
     <br><br>
     <div class="alert alert-danger" role="alert" style="display: none;" id='myAlert'>
 

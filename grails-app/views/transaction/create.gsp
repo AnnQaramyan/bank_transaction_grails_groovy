@@ -42,14 +42,9 @@
         </select>
     </div>
     <br>
-    <!-- <div id="toAcc" class="form-group">
-                 <label for="to">To</label><br>
-                 <input type="text" class="form-control" placeholder="To Who" name="to">
-            </div>
-            <br> -->
-%{--    <input type="button" value="Create" class="btn btn-primary" onclick="createTransaction()">--}%
+
     <button class="btn btn-primary" type="submit">Create</button>
-    <input type="button" value="Cancel" class="btn btn-danger" onclick="location.href='../home/home'">
+    <g:link controller="transaction" action="userTransactions"><input type="button" value="Cancel" class="btn btn-danger"></g:link>
     <br><br>
     <div class="alert alert-danger" role="alert" style="display: none;" id='myAlert'>
 

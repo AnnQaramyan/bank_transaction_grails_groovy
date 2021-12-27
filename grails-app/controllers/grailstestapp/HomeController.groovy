@@ -1,15 +1,12 @@
 package grailstestapp
 
 import grails.plugin.springsecurity.SpringSecurityService
-import org.springframework.security.access.annotation.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
-@Secured('permitAll')
+@Secured("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 class HomeController {
-    SpringSecurityService springSecurityService;
-    def index() {
-        User currentUser = springSecurityService.currentUser as User
-        render "<h1>${currentUser.firstName}</h1>"
-    }
+    SpringSecurityService springSecurityService
+
     def home(){
         User currentUser = springSecurityService.currentUser as User
         render view:'home', model:[current:currentUser]

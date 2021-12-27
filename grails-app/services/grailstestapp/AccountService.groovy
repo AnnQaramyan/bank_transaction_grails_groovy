@@ -4,8 +4,11 @@ import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
 import grailstestapp.converter.AccountConverter
+import grailstestapp.dto.account.AccountAdminModel
 import grailstestapp.dto.account.AccountUserRequestModel
 import grailstestapp.dto.account.AccountUserResponseModel
+
+import java.util.stream.Collectors
 
 @Transactional
 class AccountService {
@@ -15,17 +18,11 @@ class AccountService {
         List<Account> allByUserId = Account.findAllByUser(byId)
         return AccountConverter.accountsToResponses(allByUserId);
     }
-//    AccountUserResponseModel add(AccountUserRequestModel request, Long userId) {
-//        Account adding = AccountConverter.requestToAccount(request);
-//        adding.setIsActive(true);
-//        Date now = new Date();
-//        adding.setDateCreated(now);
-//        adding.setLastUpdated(now);
-//        adding.setStatus(Status.PENDING);
-//        adding.setUser(User.findById(userId));
-//        Account added = adding.save();
-//        return AccountConverter.accountToResponse(added);
-//    }
+    List<AccountAdminModel> getUserAccounts(Long id){
+        User byId = User.findById(id)
+        List<Account> allByUserId = Account.findAllByUser(byId)
+        return AccountConverter.accountsToAdminModels(allByUserId)
+    }
     def add(Object params){
         AccountUserRequestModel requestModel = new AccountUserRequestModel()
         requestModel.setNumber(Generator.generateRandomAccountNumber())
@@ -47,6 +44,76 @@ class AccountService {
         return AccountConverter.accountsToResponses(validByUserId);
     }
     def update(Object params){
+        User currentUser = springSecurityService.currentUser as User
+        Account accountByNumber = Account.findByNumber(params.number);
+        if(accountByNumber.getUser().getId()!=currentUser.id){
+            throw new RuntimeException("You can update only your accounts");
+        }else if(accountByNumber.getStatus()!=Status.PENDING){
+            throw new RuntimeException("You can't update accepted/rejected account");
+        }
+        else {
+            accountByNumber.setNumber(params.number);
+            Currency currency = Currency.valueOf(params.currencies)
+            accountByNumber.setCurrency(currency);
+            accountByNumber.setLastUpdated(new Date());
+            Account updated = accountByNumber.save();
+            return AccountConverter.accountToResponse(updated);
+        }
+    }
+    AccountUserResponseModel deActivate(Long id, Long userId){
+        Account account = Account.findById(id);
+        if(!account.isActive){
+            throw new RuntimeException("Already InActive ! ");
+        }
+        if(User.findById(userId).getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toSet()).contains('ROLE_ADMIN')
+                && account.getStatus() == Status.ACCEPTED){
+            account.setIsActive(false);
+            account.setLastUpdated(new Date());
+        }else if(User.findById(userId).getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toSet()).contains('ROLE_USER')
+                && account.getStatus() == Status.PENDING
+                && account.getUser().getId() == userId){
+            account.setIsActive(false);
+            account.setLastUpdated(new Date());
+        }
+        else{
+            throw new RuntimeException("Please check if you can deActive this Account ((");
+        }
+        return AccountConverter.accountToResponse(account.save());
+    }
 
+    AccountUserResponseModel activate(Long id, Long userId){
+        Account account = Account.findById(id);
+        if(account.isActive){
+            throw new RuntimeException("Already Active !!");
+        }
+        if(User.findById(userId).getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toSet()).contains('ROLE_ADMIN')
+                && account.getStatus() == Status.ACCEPTED){
+            account.setIsActive(true);
+            account.setLastUpdated(new Date());
+        }else if(User.findById(userId).getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toSet()).contains('ROLE_USER')
+                && account.getStatus() == Status.PENDING && account.getUser().getId() == userId){
+            account.setIsActive(true);
+            account.setLastUpdated(new Date());
+        }
+
+        return AccountConverter.accountToResponse(account.save());
+
+    }
+    def reject(Long id){
+        Account byId = Account.findById(id);
+        byId.setStatus(Status.REJECTED);
+        byId.setIsActive(false);
+        byId.setLastUpdated(new Date());
+        return AccountConverter.accountToAdminModel(byId.save());
+    }
+    def accept(Long id){
+        Account byId = Account.findById(id);
+        byId.setStatus(Status.ACCEPTED);
+        byId.setLastUpdated(new Date());
+        return AccountConverter.accountToAdminModel(byId.save());
+    }
+    def getAll(){
+        List<Account> requests = Account.findAll();
+        return AccountConverter.accountsToAdminModels(requests);
     }
 }
