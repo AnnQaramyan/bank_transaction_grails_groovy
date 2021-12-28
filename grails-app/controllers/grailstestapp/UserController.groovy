@@ -20,24 +20,24 @@ class UserController {
         if((springSecurityService.currentUser as User)!=null)
             redirect(controller: "home", action: "home")
     }
-    @Secured('ROLE_USER')
+    @Secured("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     def updateUser(){
         User currentUser = springSecurityService.currentUser as User
         def updatedUser = userService.update(params)
         render view:'../home/home', model: [current: currentUser]
     }
-    @Secured('ROLE_USER')
+    @Secured("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     def updateUserPassword(){
         User currentUser = springSecurityService.currentUser as User
         def updatedUserPassword = userService.updatePassword(params)
         render view:'../home/home', model: [current: currentUser]
     }
-    @Secured('ROLE_USER')
+    @Secured("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     def update(){
         User currentUser = springSecurityService.currentUser as User
         render view: 'update', model: [current:currentUser]
     }
-    @Secured('ROLE_USER')
+    @Secured("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     def updatePassword(){
 
     }

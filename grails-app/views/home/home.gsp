@@ -25,7 +25,7 @@
             <h5>${current.firstName} ${current.lastName}</h5>
             <h5>Username: ${current.username}</h5>
             <h5>Mobile: ${current.mobile}</h5>
-            <h5>Birth Date: <g:formatDate format="yyyy-MM-dd" date="${current.birthDate}"/></h5>
+            <h5>Birth Date: <g:formatDate format="yyyy-mm-dd" date="${current.birthDate}"/></h5>
             <h5 style="white-space: pre-line">${current.address.country}, ${current.address.city}
             ${current.address.street}, ${current.address.houseNumber}, ${current.address.postalCode}</h5>
             <g:link controller="user" action="update"><input type="button" class="btn btn-warning" value="Update personal info" style="margin-right:10px"></g:link>
