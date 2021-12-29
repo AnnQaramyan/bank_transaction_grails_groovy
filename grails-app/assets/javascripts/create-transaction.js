@@ -1,5 +1,5 @@
 function createToInput(){
-    let typeSelect = document.getElementsByName('types')[0];
+    let typeSelect = document.getElementsByName('type')[0];
     if(typeSelect.value == 'EXCHANGE'){
         let mainDiv = document.getElementsByClassName('container')[0];
         let btn = document.getElementsByClassName('btn')[0];

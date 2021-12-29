@@ -63,51 +63,50 @@ class TransactionService {
         return TransactionConverter.transactionsToResponses(allByUserId);
     }
 
-    def add(Object params) {
-        Double requestAmount
+    def add(TransactionUserRequestModel transactionUserRequestModel) {
         User currentUser = springSecurityService.currentUser as User
         String paramsTo
-        if (params.to == null)
-            paramsTo = params.accs
+        if (transactionUserRequestModel.to == null) {
+            paramsTo = transactionUserRequestModel.from
+            transactionUserRequestModel.to=transactionUserRequestModel.from
+        }
         else
-            paramsTo = params.to
-        if (Account.findByNumber(params.accs).getUser().getId() != currentUser.id) {
+            paramsTo = transactionUserRequestModel.to
+        if (Account.findByNumber(transactionUserRequestModel.from).getUser().getId() != currentUser.id) {
             throw new RuntimeException("You can use only your accounts");
-        } else if (Account.findByNumber(params.accs).getStatus() != Status.ACCEPTED
+        } else if (Account.findByNumber(transactionUserRequestModel.from).getStatus() != Status.ACCEPTED
                 || Account.findByNumber(paramsTo).getStatus() != Status.ACCEPTED
-                || !Account.findByNumber(params.accs).isActive
+                || !Account.findByNumber(transactionUserRequestModel.from).isActive
                 || !Account.findByNumber(paramsTo).isActive) {
             throw new RuntimeException("You can use only active accepted accounts");
-        } else if (params.types == 'EXCHANGE' && params.accs == paramsTo) {
+        } else if (transactionUserRequestModel.type == TransactionType.EXCHANGE && transactionUserRequestModel.from == paramsTo) {
             throw new RuntimeException("Choose different accounts as sender and receiver");
-        } else if (params.types != 'EXCHANGE' && params.accs != paramsTo) {
+        } else if (transactionUserRequestModel.type != TransactionType.EXCHANGE && transactionUserRequestModel.from != paramsTo) {
             throw new RuntimeException("Choose the same account as sender and receiver");
-        } else if (params.types == 'WITHDRAWAL' || params.types == 'EXCHANGE') {
+        } else if (transactionUserRequestModel.type == TransactionType.WITHDRAWAL || transactionUserRequestModel.type == TransactionType.EXCHANGE) {
             List<Transaction> allByUserId = Transaction.executeQuery("SELECT t FROM Transaction t WHERE t.from.user.id=(:userId) OR t.to.user.id=(:userId)", [userId: currentUser.id]) as List<Transaction>;
             List<Account> curAccount = new ArrayList<>();
-            curAccount.add(Account.findByNumber(params.accs));
-            requestAmount = Double.valueOf(params.amount)
-            if (getBalance(allByUserId, curAccount).get(0) - requestAmount < 0) {
+            curAccount.add(Account.findByNumber(transactionUserRequestModel.from));
+            if (getBalance(allByUserId, curAccount).get(0) - transactionUserRequestModel.amount < 0) {
                 throw new RuntimeException("Not enough balance");
             }
         }
-        TransactionUserRequestModel requestModel = new TransactionUserRequestModel()
-        TransactionType type = TransactionType.valueOf(params.types)
-        requestModel.setType(type)
-        requestAmount = Double.valueOf(params.amount)
-        requestModel.setAmount(requestAmount)
-        requestModel.setFrom(params.accs)
-        requestModel.setTo(paramsTo)
+//        TransactionUserRequestModel requestModel = new TransactionUserRequestModel()
+//        TransactionType type = TransactionType.valueOf(params.types)
+//        requestModel.setType(type)
+//        requestAmount = Double.valueOf(params.amount)
+//        requestModel.setAmount(requestAmount)
+//        requestModel.setFrom(params.accs)
+//        requestModel.setTo(paramsTo)
 
-        Transaction adding = TransactionConverter.requestToTransaction(requestModel);
-        adding.setFrom(Account.findByNumber(requestModel.getFrom()));
-        adding.setTo(Account.findByNumber(requestModel.getTo()));
-        if (requestModel.getType() == TransactionType.EXCHANGE) {
-            Double amount = Double.valueOf(params.amount)
-            Currency from = Account.findByNumber(params.accs).currency
+        Transaction adding = TransactionConverter.requestToTransaction(transactionUserRequestModel);
+        adding.setFrom(Account.findByNumber(transactionUserRequestModel.getFrom()));
+        adding.setTo(Account.findByNumber(transactionUserRequestModel.getTo()));
+        if (transactionUserRequestModel.getType() == TransactionType.EXCHANGE) {
+            Currency from = Account.findByNumber(transactionUserRequestModel.from).currency
             Currency to = Account.findByNumber(paramsTo).currency
 
-            def exchange = exchangeService.exchange(from, to, amount)
+            def exchange = exchangeService.exchange(from, to, transactionUserRequestModel.amount)
             adding.setToAmount(Double.valueOf(exchange));
         }
         adding.setIsActive(true);
@@ -150,49 +149,47 @@ class TransactionService {
         return TransactionConverter.transactionToResponse(transaction.save());
     }
 
-    TransactionUserResponseModel update(Object params, Long userId) {
+    TransactionUserResponseModel update(TransactionUserRequestModel transactionUserRequestModel, Long userId, Long hiddenId) {
         String paramsTo
-        TransactionType transactionType = TransactionType.valueOf(params.type)
-        Double amount = Double.valueOf(params.amount)
-        if(transactionType == TransactionType.EXCHANGE)
+        if(transactionUserRequestModel.type == TransactionType.EXCHANGE)
         {
-            paramsTo = params.to
+            paramsTo = transactionUserRequestModel.to
         }
         else{
-            paramsTo = params.from
+            paramsTo = transactionUserRequestModel.from
+            transactionUserRequestModel.to = transactionUserRequestModel.from
         }
-        Long transactionId = Long.valueOf(params.hiddenId)
-        if (userId == Transaction.findById(transactionId).getFrom().getUser().getId()) {
-            if (Account.findByNumber(params.from).getStatus() != Status.ACCEPTED
+        if (userId == Transaction.findById(hiddenId).getFrom().getUser().getId()) {
+            if (Account.findByNumber(transactionUserRequestModel.from).getStatus() != Status.ACCEPTED
                     || Account.findByNumber(paramsTo).getStatus() != Status.ACCEPTED
-                    || !Account.findByNumber(params.from).isActive
+                    || !Account.findByNumber(transactionUserRequestModel.from).isActive
                     || !Account.findByNumber(paramsTo).isActive) {
                 throw new RuntimeException("You can use only active accepted accounts");
-            } else if (transactionType == TransactionType.EXCHANGE && params.from==paramsTo) {
+            } else if (transactionUserRequestModel.type == TransactionType.EXCHANGE && transactionUserRequestModel.from==paramsTo) {
                 throw new RuntimeException("Choose different accounts as sender and receiver");
-            } else if (transactionType != TransactionType.EXCHANGE && params.from!=paramsTo) {
+            } else if (transactionUserRequestModel.type != TransactionType.EXCHANGE && transactionUserRequestModel.from!=paramsTo) {
                 throw new RuntimeException("Choose the same account as sender and receiver");
-            } else if (transactionType == TransactionType.WITHDRAWAL || transactionType == TransactionType.EXCHANGE) {
+            } else if (transactionUserRequestModel.type == TransactionType.WITHDRAWAL || transactionUserRequestModel.type == TransactionType.EXCHANGE) {
                 List<Transaction> allByUserId = Transaction.executeQuery("SELECT t FROM Transaction t WHERE t.from.user.id=(:userId) OR t.to.user.id=(:userId)", [userId: userId]) as List<Transaction>;
                 List<Account> curAccount = new ArrayList<>();
-                curAccount.add(Account.findByNumber(params.to));
-                if (getBalance(allByUserId, curAccount).get(0) - amount < 0) {
+                curAccount.add(Account.findByNumber(transactionUserRequestModel.to));
+                if (getBalance(allByUserId, curAccount).get(0) - transactionUserRequestModel.amount < 0) {
                     throw new RuntimeException("Not enough balance");
                 }
             }
-            Transaction transaction = Transaction.findById(transactionId);
+            Transaction transaction = Transaction.findById(hiddenId);
             if (transaction.getStatus() == Status.PENDING) {
                 if (Account.findByNumber(paramsTo).getStatus() == Status.ACCEPTED) {
-                    transaction.setAmount(amount);
-                    if (transactionType == TransactionType.EXCHANGE && transaction.getType() != TransactionType.EXCHANGE) {
-                        Currency from = Account.findByNumber(params.from).currency
+                    transaction.setAmount(transactionUserRequestModel.amount);
+                    if (transactionUserRequestModel.type == TransactionType.EXCHANGE && transaction.getType() != TransactionType.EXCHANGE) {
+                        Currency from = Account.findByNumber(transactionUserRequestModel.from).currency
                         Currency to = Account.findByNumber(paramsTo).currency
-                        def exchange = exchangeService.exchange(from, to, amount)
+                        def exchange = exchangeService.exchange(from, to, transactionUserRequestModel.amount)
                         transaction.setToAmount(Double.valueOf(exchange));
-                    } else if (transactionType != TransactionType.EXCHANGE && transaction.getType() == TransactionType.EXCHANGE) {
+                    } else if (transactionUserRequestModel.type != TransactionType.EXCHANGE && transaction.getType() == TransactionType.EXCHANGE) {
                         transaction.setToAmount(null);
                     }
-                    transaction.setType(transactionType);
+                    transaction.setType(transactionUserRequestModel.type);
                     transaction.setTo(Account.findByNumber(paramsTo));
 
                     Date now = new Date();

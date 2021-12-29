@@ -34,7 +34,8 @@
         </div>
         <div class="form-group">
             <label for="amount">Amount</label><br>
-            <input type="text" class="form-control" placeholder="Enter Amount" name="amount"><br>
+            <input type="text" class="form-control ${hasErrors(bean: transactionUserRequestModel, field: 'amount', 'error')}" placeholder="Enter Amount" name="amount"><br>
+            <bs:fieldErrors bean="${transactionUserRequestModel}" field="amount"/>
         </div>
 
         <div class="form-group">

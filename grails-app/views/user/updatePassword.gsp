@@ -20,16 +20,18 @@
 <div class="container col-md-6">
     <h2>Update Password</h2>
     <div class="form-group">
-        <label for="oldPass">Old Password</label><br>
-        <input type="password" class="form-control" placeholder="Enter Your Old Password" name="oldPass"><br>
+        <label for="oldPassword">Old Password</label><br>
+        <input type="password" class="form-control" placeholder="Enter Your Old Password" name="oldPassword" value="${passwordRequestModel.oldPassword}"><br>
     </div>
     <div class="form-group">
-        <label for="newPass">New Password</label><br>
-        <input type="password" class="form-control" placeholder="Enter Your New Password" name="newPass"><br>
+        <label for="newPassword">New Password</label><br>
+        <input type="password" class="form-control ${hasErrors(bean: passwordRequestModel, field: 'newPassword', 'error')}" placeholder="Enter Your New Password" name="newPassword" value="${passwordRequestModel.newPassword}"><br>
+        <bs:fieldErrors bean="${passwordRequestModel}" field="newPassword"/>
     </div>
     <div class="form-group">
-        <label for="confirmPass">Confirmation</label><br>
-        <input type="password" class="form-control" placeholder="Confirm Your New Password" name="confirmPass"><br>
+        <label for="confirmation">Confirmation</label><br>
+        <input type="password" class="form-control ${hasErrors(bean: passwordRequestModel, field: 'confirmation', 'error')}" placeholder="Confirm Your New Password" name="confirmation" value="${passwordRequestModel.confirmation}"><br>
+        <bs:fieldErrors bean="${passwordRequestModel}" field="confirmation"/>
     </div>
     <button class="btn btn-primary" type="submit">Update</button>
     <g:link controller="home" action="home"><input type="button" value="Cancel" class="btn btn-danger"></g:link>

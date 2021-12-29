@@ -21,43 +21,45 @@
         <h2>Update Your Profile</h2>
         <div class="form-group">
             <label for="firstName">First Name</label><br>
-            <input type="text" class="form-control" placeholder="Enter First Name" name="firstName" value="${current.firstName}"><br>
+            <input type="text" class="form-control ${hasErrors(bean: userUpdateRequestModel, field: 'firstName', 'error')}" placeholder="Enter First Name" name="firstName" value="${userUpdateRequestModel.firstName}"><br>
+            <bs:fieldErrors bean="${userUpdateRequestModel}" field="firstName"/>
         </div>
         <div class="form-group">
             <label for="lastName">Last Name</label><br>
-            <input type="text" class="form-control" placeholder="Enter Last Name" name="lastName" value="${current.lastName}"><br>
+            <input type="text" class="form-control ${hasErrors(bean: userUpdateRequestModel, field: 'lastName', 'error')}" placeholder="Enter Last Name" name="lastName" value="${userUpdateRequestModel.lastName}"><br>
+            <bs:fieldErrors bean="${userUpdateRequestModel}" field="lastName"/>
         </div>
         <div class="form-group">
             <label for="email">Email</label><br>
-            <input type="email" class="form-control" placeholder="Enter Email" name="email" value="${current.username}"><br>
+            <input type="email" class="form-control" placeholder="Enter Email" name="email" value="${userUpdateRequestModel.email}"><br>
         </div>
         <div class="form-group">
             <label for="birthDate">Birth Date</label><br>
-            <input type="date" class="form-control" placeholder="Enter Birth Date" name="birthDate" value="<g:formatDate format="yyyy-mm-dd" date="${current.birthDate}"/>"><br>
+            <input type="date" class="form-control" placeholder="Enter Birth Date" name="birthDate" value="<g:formatDate format="yyyy-MM-dd" date="${userUpdateRequestModel.birthDate}"/>"><br>
         </div>
         <div class="form-group">
             <label for="mobile">Mobile</label><br>
-            <input type="text" class="form-control" placeholder="Enter Mobile" name="mobile" value="${current.mobile}"><br>
+            <input type="text" class="form-control" placeholder="Enter Mobile" name="mobile" value="${userUpdateRequestModel.mobile}"><br>
         </div>
         <div class="form-group">
-            <label for="country">Country</label><br>
-            <input type="text" class="form-control" placeholder="Enter Country" name="country" value="${current.address.country}"><br>
+            <label for="addressUserModel.country">Country</label><br>
+            <input type="text" class="form-control" placeholder="Enter Country" name="addressUserModel.country" value="${userUpdateRequestModel.addressUserModel.country}"><br>
         </div>
         <div class="form-group">
-            <label for="city">City</label><br>
-            <input type="text" class="form-control" placeholder="Enter City" name="city" value="${current.address.city}"><br>
+            <label for="addressUserModel.city">City</label><br>
+            <input type="text" class="form-control" placeholder="Enter City" name="addressUserModel.city" value="${userUpdateRequestModel.addressUserModel.city}"><br>
         </div>
         <div class="form-group">
-            <label for="street">Street</label><br>
-            <input type="text" class="form-control" placeholder="Enter Street" name="street" value="${current.address.street}"><br>
+            <label for="addressUserModel.street">Street</label><br>
+            <input type="text" class="form-control" placeholder="Enter Street" name="addressUserModel.street" value="${userUpdateRequestModel.addressUserModel.street}"><br>
         </div>
         <div class="form-group">
-            <label for="houseNumber">House Number</label><br>
-            <input type="text" class="form-control" placeholder="Enter House Number" name="houseNumber" value="${current.address.houseNumber}"><br>
+            <label for="addressUserModel.houseNumber">House Number</label><br>
+            <input type="text" class="form-control" placeholder="Enter House Number" name="addressUserModel.houseNumber" value="${userUpdateRequestModel.addressUserModel.houseNumber}"><br>
         </div>
         <div class="form-group">
-            <label for="postalCode">Postal Code</label><br>
-            <input type="text" class="form-control" placeholder="Enter Postal Code" name="postalCode" value="${current.address.postalCode}"><br>
+            <label for="addressUserModel.postalCode">Postal Code</label><br>
+            <input type="text" class="form-control" placeholder="Enter Postal Code" name="addressUserModel.postalCode" value="${userUpdateRequestModel.addressUserModel.postalCode}"><br>
         </div>
         <button class="btn btn-primary" type="submit">Update</button>
         <g:link controller="home" action="home"><input type="button" value="Cancel" class="btn btn-danger"></g:link>

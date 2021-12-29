@@ -2,6 +2,7 @@ package grailstestapp
 
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
+import grailstestapp.dto.account.AccountUserRequestModel
 import grailstestapp.dto.account.AccountUserResponseModel
 import grailstestapp.dto.transaction.TransactionUserRequestModel
 import grailstestapp.dto.transaction.TransactionUserResponseModel
@@ -23,12 +24,18 @@ class TransactionController {
     def create(){
         User currentUser = springSecurityService.currentUser as User
         List<AccountUserResponseModel> validAccounts =  accountService.getValidByUserId(currentUser.id)
-        render view: 'create', model: [validAccountList:validAccounts]
+        TransactionUserRequestModel transactionUserRequestModel = new TransactionUserRequestModel()
+        render view: 'create', model: [validAccountList:validAccounts,transactionUserRequestModel:transactionUserRequestModel]
     }
     @Secured('ROLE_USER')
-    def add(){
+    def add(TransactionUserRequestModel transactionUserRequestModel){
         User currentUser = springSecurityService.currentUser as User
-        def addedTransaction = transactionService.add(params)
+        if (transactionUserRequestModel.hasErrors()) {
+            List<AccountUserResponseModel> validAccounts =  accountService.getValidByUserId(currentUser.id)
+            render view: 'create', model: [validAccountList:validAccounts,transactionUserRequestModel:transactionUserRequestModel]
+            return
+        }
+        def addedTransaction = transactionService.add(transactionUserRequestModel)
         List<TransactionUserResponseModel> transactions = transactionService.getAllByUserId(currentUser.id)
         render view: 'userTransactions', model: [transactionList: transactions,current: currentUser]
     }
@@ -55,9 +62,15 @@ class TransactionController {
         render transactionService.accept(id)
     }
     @Secured('ROLE_USER')
-    def put(){
+    def put(TransactionUserRequestModel transactionUserRequestModel){
         User currentUser = springSecurityService.currentUser as User
-        def updatedTransaction = transactionService.update(params,currentUser.id)
+        if (transactionUserRequestModel.hasErrors()) {
+            List<AccountUserResponseModel> validAccounts =  accountService.getValidByUserId(currentUser.id)
+            render view: 'update', model: [validAccountList:validAccounts,transactionUserRequestModel:transactionUserRequestModel]
+            return
+        }
+        Long hiddenId = Long.valueOf(params.hiddenId)
+        def updatedTransaction = transactionService.update(transactionUserRequestModel,currentUser.id,hiddenId)
         List<TransactionUserResponseModel> transactions = transactionService.getAllByUserId(currentUser.id)
         render view: 'userTransactions', model: [transactionList: transactions,current: currentUser]
     }
@@ -65,6 +78,7 @@ class TransactionController {
     def update(){
         User currentUser = springSecurityService.currentUser as User
         List<AccountUserResponseModel> validAccounts =  accountService.getValidByUserId(currentUser.id)
-        render view: 'update', model: [validAccountList:validAccounts]
+        TransactionUserRequestModel transactionUserRequestModel = new TransactionUserRequestModel()
+        render view: 'update', model: [validAccountList:validAccounts, transactionUserRequestModel: transactionUserRequestModel]
     }
 }

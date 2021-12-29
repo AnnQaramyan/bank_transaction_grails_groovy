@@ -21,8 +21,8 @@
 <div class="container col-md-6">
     <h2>Create Transaction</h2>
     <div class="form-group">
-        <label for="types">Currency</label><br>
-        <select name="types" class="form-select" onchange="createToInput()">
+        <label for="type">Currency</label><br>
+        <select name="type" class="form-select" onchange="createToInput()">
             <option value="DEPOSIT">DEPOSIT</option>
             <option value="WITHDRAWAL">WITHDRAWAL</option>
             <option value="EXCHANGE">EXCHANGE</option>
@@ -31,11 +31,12 @@
     <br>
     <div class="form-group">
         <label for="amount">Amount</label><br>
-        <input type="text" class="form-control" placeholder="Enter Amount" name="amount"><br>
+        <input type="text" class="form-control ${hasErrors(bean: transactionUserRequestModel, field: 'amount', 'error')}" placeholder="Enter Amount" name="amount"><br>
+        <bs:fieldErrors bean="${transactionUserRequestModel}" field="amount"/>
     </div>
     <div class="form-group">
-        <label for="accs">From</label><br>
-        <select name="accs" class="form-select">
+        <label for="from">From</label><br>
+        <select name="from" class="form-select">
             <g:each in="${validAccountList}">
                 <option value="${it.number}">${it.number}</option>
             </g:each>
