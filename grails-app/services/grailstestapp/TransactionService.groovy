@@ -13,18 +13,18 @@ class TransactionService {
     SpringSecurityService springSecurityService
     def exchangeService
 
-    List<Double> balance(Long id) {
+    List<Double> balance(Long id, Integer pageNumber) {
 
         List<Account> accounts =
                 Account.executeQuery("select acc from Account acc where acc.user.id=(:userId)", [userId: id]) as List<Account>
         List<Transaction> transactions = Transaction.executeQuery("SELECT t FROM Transaction t WHERE t.from.user.id=(:userId) OR t.to.user.id=(:userId)", [userId: id]) as List<Transaction>
 
 
-        return getBalance(transactions, accounts);
+        return getBalance(transactions, accounts, pageNumber);
     }
 
 
-    List<Double> getBalance(List<Transaction> transactions, List<Account> accounts) {
+    List<Double> getBalance(List<Transaction> transactions, List<Account> accounts, Integer pageNumber) {
         List<Double> balances = new ArrayList<>();
         for (Account account : accounts) {
             double balance = 0.0;
@@ -54,12 +54,14 @@ class TransactionService {
             balances.add(balance);
         }
 
-
-        return balances;
+        if((pageNumber+1)*5<=balances.size())
+            return balances.subList(pageNumber*5, (pageNumber+1)*5)
+        else
+            return balances.subList(pageNumber*5,balances.size())
     }
-    List<TransactionUserResponseModel> getAllByUserId(Long id) {
+    List<TransactionUserResponseModel> getAllByUserId(Long id, Integer max, Integer pageNumber) {
         List<Transaction> allByUserId =
-                Transaction.executeQuery("SELECT t FROM Transaction t WHERE t.from.user.id=(:userId) OR t.to.user.id=(:userId)", [userId: id]);
+                Transaction.executeQuery("SELECT t FROM Transaction t WHERE t.from.user.id=(:userId) OR t.to.user.id=(:userId)", [userId: id, max:max, offset: pageNumber*5]);
         return TransactionConverter.transactionsToResponses(allByUserId);
     }
 
@@ -208,11 +210,13 @@ class TransactionService {
             throw new RuntimeException("You can update only your transactions");
         }
     }
-    List<TransactionAdminModel> getAll(){
-        List<Transaction> all = Transaction.findAll();
+    List<TransactionAdminModel> getAll(Integer pageNumber){
+        List<Transaction> all = Transaction.findAll(max:5,offset:pageNumber*5);
         return TransactionConverter.transactionsToAdminModels(all);
     }
-
+    Integer getCount(){
+        return Transaction.findAll().size()
+    }
     TransactionAdminModel accept(Long id){
         Transaction byId = Transaction.findById(id);
         byId.setStatus(Status.ACCEPTED);

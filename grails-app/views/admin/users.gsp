@@ -32,55 +32,16 @@
             <th scope="col">Activation Status</th>
         </tr>
         </thead>
-        <tbody>
-        <g:each in="${usersList}" var="currentItem">
-            <tr>
-                <td onclick="accountsTable('${currentItem.id}', '${createLink(controller: 'admin',action: 'userAccounts')}');
-                document.getElementById('myModal').setAttribute('style','display:block')">${currentItem.id}</td>
-                <td>${currentItem.firstName}</td>
-                <td>${currentItem.lastName}</td>
-                <td>${currentItem.email}</td>
-                <td><g:formatDate format="yyyy-MM-dd" date="${currentItem.birthDate}"/></td>
-                <td>${currentItem.mobile}</td>
-                <td>${currentItem.addressAdminModel.country},
-                    ${currentItem.addressAdminModel.city},
-                    ${currentItem.addressAdminModel.street},
-                    ${currentItem.addressAdminModel.houseNumber},
-                    ${currentItem.addressAdminModel.postalCode}
-                </td>
-                <td><g:formatDate format="yyyy-MM-dd HH:mm:ss" date="${currentItem.dateCreated}"/></td>
-                <td><g:formatDate format="yyyy-MM-dd HH:mm:ss" date="${currentItem.lastUpdated}"/></td>
-                <td>${currentItem.authorities}</td>
-                <g:if test="${currentItem.isActive}">
-                    <td>Active</td>
-                    <td><input type="button" class="btn btn-danger" value="Deactivate"
-                               onclick="deactivateUser('${currentItem.id}',this)"></td>
-                </g:if>
-                <g:else>
-                    <td>Inactive</td>
-                    <td><input type="button" class="btn btn-success" value="Activate"
-                               onclick="activateUser('${currentItem.id}',this)"></td>
-                </g:else>
-
-            </tr>
-        </g:each>
+        <tbody id="usersTableBody">
+            <g:render template="usersContent" model="${usersList}"/>
         </tbody>
     </table>
 </div>
-<div id="myModal" class="modal">
-    <div id="myCont" class="modal-content">
-        <span class="close">&times;</span>
-        <div id="tableCont">
-        </div>
-    </div>
-
+<div id="paginationNav">
+    <g:if test="${count>1}">
+        <g:render template="../usersPaginationNavbar" model="${count}, ${page}"/>
+    </g:if>
 </div>
-<script type="text/javascript">
-    let modal = document.getElementById("myModal");
-    let span = document.getElementsByClassName("close")[0];
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-</script>
+
 </body>
 </html>

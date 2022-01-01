@@ -17,9 +17,33 @@ class TransactionController {
     @Secured('ROLE_USER')
     def userTransactions(){
         User currentUser = springSecurityService.currentUser as User
-        List<TransactionUserResponseModel> transactions = transactionService.getAllByUserId(currentUser.id)
-        render view: 'userTransactions', model: [transactionList: transactions,current: currentUser]
+        List<TransactionUserResponseModel> transactions = transactionService.getAllByUserId(currentUser.id,5,0)
+        Integer count = transactionService.getAllByUserId(currentUser.id,Transaction.findAll().size(),0).size()
+        if(count%5==0)
+            count = count/5
+        else{
+            count = count/5+1
+        }
+        render view: 'userTransactions', model: [transactionList: transactions,current: currentUser, count:count, page:1]
     }
+    def paginatedUserTransactions(){
+        User currentUser = springSecurityService.currentUser as User
+        Integer pageNumber = Integer.valueOf(params.page)
+        List<TransactionUserResponseModel> transactions = transactionService.getAllByUserId(currentUser.id,5,pageNumber-1)
+        render template: 'userTransactionsContent', model: [transactionList: transactions]
+    }
+    def userTransactionsPaginationNavbar(){
+        User currentUser = springSecurityService.currentUser as User
+        Integer pageNumber = Integer.valueOf(params.page)
+        Integer count = transactionService.getAllByUserId(currentUser.id,Transaction.findAll().size(),0).size()
+        if(count%5==0)
+            count = count/5
+        else{
+            count = count/5+1
+        }
+        render template: '../userTransactionsPaginationNavbar', model: [page: pageNumber,count: count]
+    }
+
     @Secured('ROLE_USER')
     def create(){
         User currentUser = springSecurityService.currentUser as User
@@ -35,9 +59,16 @@ class TransactionController {
             render view: 'create', model: [validAccountList:validAccounts,transactionUserRequestModel:transactionUserRequestModel]
             return
         }
+
         def addedTransaction = transactionService.add(transactionUserRequestModel)
-        List<TransactionUserResponseModel> transactions = transactionService.getAllByUserId(currentUser.id)
-        render view: 'userTransactions', model: [transactionList: transactions,current: currentUser]
+        Integer count = transactionService.getAllByUserId(currentUser.id,Transaction.findAll().size(),0).size()
+        if(count%5==0)
+            count = count/5
+        else{
+            count = count/5+1
+        }
+        List<TransactionUserResponseModel> transactions = transactionService.getAllByUserId(currentUser.id,5,count-1)
+        render view: 'userTransactions', model: [transactionList: transactions,current: currentUser,count: count,page: count]
     }
     @Secured("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     def deactivate(){
@@ -70,9 +101,16 @@ class TransactionController {
             return
         }
         Long hiddenId = Long.valueOf(params.hiddenId)
+        Integer pageNumber = Integer.valueOf(params.hiddenPageNumber)
         def updatedTransaction = transactionService.update(transactionUserRequestModel,currentUser.id,hiddenId)
-        List<TransactionUserResponseModel> transactions = transactionService.getAllByUserId(currentUser.id)
-        render view: 'userTransactions', model: [transactionList: transactions,current: currentUser]
+        Integer count = transactionService.getAllByUserId(currentUser.id,Transaction.findAll().size(),0).size()
+        if(count%5==0)
+            count = count/5
+        else{
+            count = count/5+1
+        }
+        List<TransactionUserResponseModel> transactions = transactionService.getAllByUserId(currentUser.id,5,pageNumber-1)
+        render view: 'userTransactions', model: [transactionList: transactions,current: currentUser, count: count, page: pageNumber]
     }
     @Secured('ROLE_USER')
     def update(){

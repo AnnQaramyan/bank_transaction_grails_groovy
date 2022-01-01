@@ -13,9 +13,9 @@ import java.util.stream.Collectors
 @Transactional
 class AccountService {
     SpringSecurityService springSecurityService
-    List<AccountUserResponseModel> getAllByUserId(Long id){
+    List<AccountUserResponseModel> getAllByUserId(Long id, Integer max, Integer pageNumber){
         User byId = User.findById(id)
-        List<Account> allByUserId = Account.findAllByUser(byId)
+        List<Account> allByUserId = Account.findAllByUser(byId,[max: max,offset: pageNumber*5])
         return AccountConverter.accountsToResponses(allByUserId);
     }
     List<AccountAdminModel> getUserAccounts(Long id){
@@ -112,8 +112,11 @@ class AccountService {
         byId.setLastUpdated(new Date());
         return AccountConverter.accountToAdminModel(byId.save());
     }
-    def getAll(){
-        List<Account> requests = Account.findAll();
+    def getAll(Integer pageNumber){
+        List<Account> requests = Account.findAll(max:5,offset:pageNumber*5);
         return AccountConverter.accountsToAdminModels(requests);
+    }
+    Integer getCount(){
+        return Account.findAll().size()
     }
 }

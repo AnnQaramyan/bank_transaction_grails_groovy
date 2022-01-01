@@ -24,6 +24,9 @@
             <input type="text" id="hiddenIdInput" name="hiddenId" hidden>
         </div>
         <div class="form-group">
+            <input type="text" id="hiddenPageNumber" name="hiddenPageNumber" hidden>
+        </div>
+        <div class="form-group">
             <label for="type">Types</label><br>
             <select name="type" class="form-select" onchange="updateToInput()">
                 <option value="DEPOSIT">DEPOSIT</option>
@@ -76,6 +79,8 @@
         if(typeSelect.value == 'EXCHANGE'){
             toInput.style.display = 'block';
         }
+        let pageNumber = document.getElementById('hiddenPageNumber');
+        pageNumber.value = localStorage.getItem('pageNumber')
     }
 </script>
 </body>

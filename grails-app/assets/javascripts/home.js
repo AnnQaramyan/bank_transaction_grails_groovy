@@ -1189,9 +1189,10 @@ async function activateAccount(acc_id,bt){
                 + now.getMinutes() + ":" + now.getSeconds();
     });
 }
-function accountUpdateButtonEvent(accNumber, accCurrency){
+function accountUpdateButtonEvent(accNumber, accCurrency, pageNumber){
     localStorage.setItem('accNumber',accNumber);
     localStorage.setItem('accCurrency',accCurrency);
+    localStorage.setItem('pageNumber',pageNumber)
 }
 function transactionUpdateButtonEvent(trType, trAmount, trFrom, trTo){
     localStorage.setItem('trType',trType);

@@ -1,9 +1,12 @@
 package grailstestapp
 
+import grails.gorm.PagedResultList
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
+import grailstestapp.converter.UserConverter
 import grailstestapp.dto.PasswordRequestModel
 import grailstestapp.dto.address.AddressUserModel
+import grailstestapp.dto.user.UserFilters
 import grailstestapp.dto.user.UserRequestModel
 import grailstestapp.dto.user.UserResponseModel
 import grailstestapp.dto.user.UserUpdateRequestModel
@@ -63,11 +66,6 @@ class UserController {
         userUpdateRequestModel.setBirthDate(currentUser.birthDate)
         userUpdateRequestModel.setMobile(currentUser.mobile)
         AddressUserModel addressUserModel = new AddressUserModel()
-//        userUpdateRequestModel.getAddressUserModel().setCountry(currentUser.address.country)
-//        userUpdateRequestModel.getAddressUserModel().setCity(currentUser.address.city)
-//        userUpdateRequestModel.getAddressUserModel().setStreet(currentUser.address.street)
-//        userUpdateRequestModel.getAddressUserModel().setHouseNumber(currentUser.address.houseNumber)
-//        userUpdateRequestModel.getAddressUserModel().setPostalCode(currentUser.address.postalCode)
         addressUserModel.setCountry(currentUser.address.country)
         addressUserModel.setCity(currentUser.address.city)
         addressUserModel.setStreet(currentUser.address.street)
@@ -80,5 +78,28 @@ class UserController {
     def updatePassword(){
         PasswordRequestModel passwordRequestModel = new PasswordRequestModel()
         render view: 'updatePassword', model: [passwordRequestModel:passwordRequestModel]
+    }
+
+    def autocomplete() {
+        String usernameStart = params.email
+        withFormat {
+            json {
+                respond(status: 200)
+            }
+        }
+    }
+
+    def getUsersFiltered(UserFilters filters) {
+        if(filters == null) {
+            session.userListFilters = null
+            //TODO
+        }
+        session.userListFilters = filters
+        final PagedResultList<User> users = userService.getUsers(filters)
+        withFormat {
+            json {
+                respond(status: 200, users: users.collect { UserConverter.userToAdminModel(it)}, totalCount: users.totalCount)
+            }
+        }
     }
 }

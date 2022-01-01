@@ -20,6 +20,9 @@
 <div class="container col-md-6">
     <h2>Update Account</h2>
     <div class="form-group">
+        <input type="text" class="form-control" name="hiddenPageNumberInput" id="hiddenPageNumberInput" hidden>
+    </div>
+    <div class="form-group">
         <label for="number">Number</label><br>
         <input type="text" class="form-control" placeholder="Enter Account Number" name="number" readonly><br>
     </div>
@@ -46,7 +49,8 @@
         accNum.value = localStorage.getItem('accNumber');
         let currency = document.getElementsByName('currencies')[0];
         currency.value = localStorage.getItem('accCurrency');
-
+        let hiddenPageNumber = document.getElementById('hiddenPageNumberInput');
+        hiddenPageNumber.value = localStorage.getItem('pageNumber');
     }
 </script>
 </body>
