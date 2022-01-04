@@ -1,12 +1,9 @@
 package grailstestapp
 
-import grails.gorm.PagedResultList
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import grailstestapp.converter.UserConverter
 import grailstestapp.dto.PasswordRequestModel
-import grailstestapp.dto.account.AccountUserResponseModel
-import grailstestapp.dto.address.AddressUserModel
 import grailstestapp.dto.user.UserAdminModel
 import grailstestapp.dto.user.UserFilters
 import grailstestapp.dto.user.UserRequestModel
@@ -96,27 +93,29 @@ class UserService {
         } as List<User>).collect { UserConverter.userToAdminModel(it) }
     }
 
-    PagedResultList<User> getUsers(UserFilters filters) {
-        return (User.createCriteria().list(max: 10, offset: 10) {
+    List<UserAdminModel> getUsers(UserFilters filters,Integer pageNumber) {
+        def users = (User.createCriteria().list(max:5, offset:pageNumber*5 ) {
+            println filters.createdAfter
             if(filters.username != null) {
-                eq("username", filters.username)
+                ilike("username", "%" + filters.username + "%")
             }
-            if(filters.role != null) {
-                //TODO
+            else if(filters.createdAfter != null) {
+                ge("dateCreated", filters.createdAfter)
             }
-            if(filters.createdAfter != null) {
-                if(filters.notBefore != null) {
-                    between("dateCreated", filters.createdAfter, filters.notBefore)
-                } else {
-                    ge("dateCreated", filters.createdAfter)
-                }
-            } else {
-                if(filters.notBefore != null) {
-                    le("dateCreated", filters.notBefore)
-                }
+            else if(filters.lastUpdated != null) {
+                ge("lastUpdated", filters.lastUpdated)
             }
-        } as PagedResultList<User>)
-
+            else if(filters.firstName != null) {
+                ilike("firstName", "%" + filters.firstName + "%")
+            }
+            else if(filters.lastName != null) {
+                ilike("lastName", "%" + filters.lastName + "%")
+            }
+            else if(filters.isActive != null) {
+                eq("isActive", filters.isActive)
+            }
+        } as List<User>)
+        return UserConverter.usersToAdminModels(users)
     }
 
 }
