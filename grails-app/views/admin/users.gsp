@@ -12,10 +12,30 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Users</title>
+    <asset:javascript src="filter.js"></asset:javascript>
 </head>
 
 <body>
 <div id="mainDiv" style="width: 99%">
+    <div class="header-search">
+        <g:form>
+            <g:textField name="search" class="search-field" placeholder="search"/>
+            <select name="filter_by"  class="selectpicker"onchange="createToInput()">
+                <option value="first_name">First Name</option>
+                <option value="last_name">Last Name</option>
+                <option value="email">Email</option>
+                <option value="date_created">Date Created</option>
+                <option value="last_updated">Last Updated</option>
+                <option value="act_status">Activation Status</option>
+            </select>
+            <br>
+            <button type="button" class="btn btn-primary" onclick="filter(document.getElementsByName('search')[0].value, document.getElementsByName('filter_by')[0].value)"><i class="fa fa-search fa-lg"></i>Filter</button>
+            <br>
+            <br>
+
+        </g:form>
+
+    </div>
     <table class="table table-bordered table-hover">
         <thead>
         <tr>

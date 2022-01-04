@@ -2,9 +2,11 @@ package grailstestapp
 
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
+import grailstestapp.converter.UserConverter
 import grailstestapp.dto.account.AccountAdminModel
 import grailstestapp.dto.transaction.TransactionAdminModel
 import grailstestapp.dto.user.UserAdminModel
+import grailstestapp.dto.user.UserFilters
 
 @Secured('ROLE_ADMIN')
 class AdminController {
@@ -12,60 +14,75 @@ class AdminController {
     def accountService
     def transactionService
     SpringSecurityService springSecurityService
-    def accountRequests(){
+
+    def accountRequests() {
         List<AccountAdminModel> requests = accountService.getAll(0)
         Integer count = accountService.getCount()
-        if(count%5==0)
-            count = count/5
-        else{
-            count = count/5+1
+        if (count % 5 == 0) count = count / 5 else {
+            count = count / 5 + 1
         }
-        render view: 'accountRequests', model: ['requestsList': requests, 'count':count, page:1]
+        render view: 'accountRequests', model: ['requestsList': requests, 'count': count, page: 1]
     }
-    def paginatedAccounts(){
+
+    def paginatedAccounts() {
         Integer pageNumber = Integer.valueOf(params.page)
-        List<AccountAdminModel> accounts = accountService.getAll(pageNumber-1)
-        render template: 'accountRequestsContent', model: ['requestsList':accounts]
+        List<AccountAdminModel> accounts = accountService.getAll(pageNumber - 1)
+        render template: 'accountRequestsContent', model: ['requestsList': accounts]
     }
-    def accountsPaginationNavbar(){
+
+    def accountsPaginationNavbar() {
         Integer pageNumber = Integer.valueOf(params.page)
         Integer count = accountService.getCount()
-        if(count%5==0)
-            count = count/5
-        else{
-            count = count/5+1
+        if (count % 5 == 0) count = count / 5 else {
+            count = count / 5 + 1
         }
-        render template: '../accountsPaginationNavbar', model: ['page':pageNumber, 'count':count]
+        render template: '../accountsPaginationNavbar', model: ['page': pageNumber, 'count': count]
     }
-    def users(){
-//        def filters = session.userFilters
-//        if(filters != null) {
-//            render view: 'users', model: ['usersList': userService.getUsers((UserFilters)filters).collect { UserConverter.userToAdminModel(it)}]
-//        }
-        List<UserAdminModel> users = userService.getAll(0)
+
+    def get_user_list(Integer page_number) {
+        List<UserAdminModel> users
+
+        if (params.search != null) {
+
+            users = UserConverter.usersToAdminModels(User.findAll(max:5, offset:page_number*5))
+            def filters = new UserFilters( params.search, params.filter_by)
+           // users = userService.getUsers(filters, page_number)
+            users = userService.getUsers(filters, page_number)
+        } else {
+            users = userService.getAll(page_number)
+        }
+        return users
+    }
+
+    def users() {
+        List<UserAdminModel> users = get_user_list(0)
+        Integer count
+        if(params.search!=null){
+            count = users.size()
+        }else{
+            count = userService.getCount()
+        }
+        if (count % 5 == 0) count = count / 5 else {
+            count = count / 5 + 1
+        }
+        render view: 'users', model: ['usersList': users, 'count': count, 'page': 1]
+    }
+
+    def paginatedUsers() {
+        //Integer pageNumber = Integer.valueOf(params.page)
+        List<UserAdminModel> users = get_user_list(0)
+        render template: 'usersContent', model: ['usersList': users]
+    }
+
+    def usersPaginationNavbar() {
+        //Integer pageNumber = Integer.valueOf(params.page)
         Integer count = userService.getCount()
-        if(count%5==0)
-            count = count/5
-        else{
+        if (count % 5 == 0) count = count / 5 else {
             count = count/5+1
         }
-        render view: 'users', model: ['usersList':users, 'count':count, 'page':1]
+        render template: '../usersPaginationNavbar', model: ['page':1, 'count':count]
     }
-    def paginatedUsers(){
-        Integer pageNumber = Integer.valueOf(params.page)
-        List<UserAdminModel> users = userService.getAll(pageNumber-1)
-        render template: 'usersContent', model: ['usersList':users]
-    }
-    def usersPaginationNavbar(){
-        Integer pageNumber = Integer.valueOf(params.page)
-        Integer count = userService.getCount()
-        if(count%5==0)
-            count = count/5
-        else{
-            count = count/5+1
-        }
-        render template: '../usersPaginationNavbar', model: ['page':pageNumber, 'count':count]
-    }
+
     def transactionRequests(){
         List<TransactionAdminModel> transactions = transactionService.getAll(0)
         Integer count = transactionService.getCount()
@@ -76,6 +93,7 @@ class AdminController {
         }
         render view: 'transactionRequests', model: ['transactionsList':transactions, 'count':count, 'page':1]
     }
+
     def paginatedTransactions(){
         Integer pageNumber = Integer.valueOf(params.page)
         List<TransactionAdminModel> transactions = transactionService.getAll(pageNumber-1)
