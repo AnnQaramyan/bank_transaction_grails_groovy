@@ -43,6 +43,10 @@ class AccountService {
         List<Account> validByUserId = Account.executeQuery("SELECT acc FROM Account acc WHERE acc.user.id=(:user_id) AND acc.status='ACCEPTED' AND acc.isActive=true",[user_id:user_id]);
         return AccountConverter.accountsToResponses(validByUserId);
     }
+
+    Account getByNumber(String number){
+        return  Account.findByNumber(number)
+    }
     def update(Object params){
         User currentUser = springSecurityService.currentUser as User
         Account accountByNumber = Account.findByNumber(params.number);

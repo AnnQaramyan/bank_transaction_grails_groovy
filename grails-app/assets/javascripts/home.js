@@ -695,6 +695,104 @@ async function fetchAccountRequests(){
     });
     //console.log(response.json());
 }
+async function deactivateAcceptedLoan(loan_id,bt){
+    const url = `http://localhost:8080/admin/deactivateLoan?id=${loan_id}`;
+    const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Access-Control-Allow-Origin':'*'
+        } // body data type must match "Content-Type" header
+    }).then(res=>{
+        if(res.status==200){
+            let parTr = bt.parentElement.parentElement;
+            let deactivationTd = parTr.children[7];
+            deactivationTd.innerHTML = 'Inactive';
+            bt.setAttribute('class','btn btn-light');
+            bt.setAttribute('value', 'Activate');
+            bt.setAttribute('onclick', `activateAcceptedLoan(${loan_id},this)`);
+            let lUpd = parTr.children[4];
+            let now = new Date()
+            lUpd.innerHTML=now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate()
+                + ' ' + now.getHours() + ":"
+                + now.getMinutes() + ":" + now.getSeconds();
+        }
+    });
+}
+async function activateAcceptedLoan(loan_id,bt) {
+    const url = `http://localhost:8080/admin/activateLoan?id=${loan_id}`;
+    const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Access-Control-Allow-Origin':'*'
+        } // body data type must match "Content-Type" header
+    }).then(res=>{
+        if(res.status==200){
+            let parTr = bt.parentElement.parentElement;
+            let deactivationTd = parTr.children[7];
+            deactivationTd.innerHTML = 'Active';
+            bt.setAttribute('class','btn btn-secondary');
+            bt.setAttribute('value', 'Deactivate');
+            bt.setAttribute('onclick', `deactivateAcceptedLoan(${loan_id},this)`);
+            let lUpd = parTr.children[4];
+            let now = new Date()
+            lUpd.innerHTML=now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate()
+                + ' ' + now.getHours() + ":"
+                + now.getMinutes() + ":" + now.getSeconds();
+        }
+    });
+} // TODO
+async function acceptLoan(loan_id, bt) {
+    const url = `http://localhost:8080/admin/acceptLoan?id=${loan_id}`;
+    const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Access-Control-Allow-Origin':'*'
+        } // body data type must match "Content-Type" header
+    }).then(res=>{
+        if(res.status==200){
+            let parentTr = bt.parentElement.parentElement;
+            parentTr.children[6].innerHTML = 'ACCEPTED';
+            let nextBt = parentTr.children[9].children[0];
+            let lUpd = parentTr.children[4];
+            bt.remove();
+            nextBt.remove();
+            let actStatBt = document.createElement('input');
+            actStatBt.setAttribute('type','button');
+            actStatBt.setAttribute('class','btn btn-secondary');
+            actStatBt.setAttribute('value','Deactivate');
+            actStatBt.setAttribute('onclick',`deactivateAcceptedLoan(${loan_id},this)`);
+            parentTr.children[8].appendChild(actStatBt);
+            let now = new Date()
+            lUpd.innerHTML=now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate()
+                + ' ' + now.getHours() + ":"
+                + now.getMinutes() + ":" + now.getSeconds();
+        }
+    });
+} // TODO
+async function rejectLoan(loan_id, bt) {
+    const url = `http://localhost:8080/admin/rejectLoan?id=${loan_id}`;
+    const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Access-Control-Allow-Origin':'*'
+        } // body data type must match "Content-Type" header
+    }).then(res=>{
+        if(res.status==200){
+            let parentTr = bt.parentElement.parentElement;
+            parentTr.children[6].innerHTML = 'REJECTED';
+            parentTr.children[7].innerHTML = 'Inactive';
+            let nextBt = parentTr.children[8].children[0];
+            let lUpd = parentTr.children[4];
+            bt.remove();
+            nextBt.remove();
+            let now = new Date()
+            lUpd.innerHTML=now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate()
+                + ' ' + now.getHours() + ":"
+                + now.getMinutes() + ":" + now.getSeconds();
+        }
+    });
+} // TODO implement backend
+
 async function deactivateAcceptedAccount(acc_id,bt){
     const url = `http://localhost:8080/account/deactivate?id=${acc_id}`;
     const response = await fetch(url, {

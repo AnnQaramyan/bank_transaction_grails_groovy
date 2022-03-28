@@ -19,6 +19,7 @@ class UserController {
     def add(UserRequestModel userRequestModel){
 
         if (userRequestModel.hasErrors()) {
+            println userRequestModel.errors
             render view: 'register', model: [userRequestModel: userRequestModel]
             return
         }

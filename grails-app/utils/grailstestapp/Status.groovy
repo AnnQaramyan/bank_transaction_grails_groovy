@@ -3,6 +3,7 @@ package grailstestapp
 enum Status {
     PENDING,
     ACCEPTED,
-    REJECTED
+    REJECTED,
+    IN_REVIEW
 
 }

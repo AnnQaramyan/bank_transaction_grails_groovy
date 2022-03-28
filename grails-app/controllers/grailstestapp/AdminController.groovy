@@ -13,6 +13,7 @@ class AdminController {
     def userService
     def accountService
     def transactionService
+    def loanService
     SpringSecurityService springSecurityService
 
     def accountRequests() {
@@ -129,5 +130,48 @@ class AdminController {
     def acceptAccount(){
         Long id = Long.valueOf(params.id)
         render accountService.accept(id)
+    }
+
+    def getAllLoans(){
+        List<Loan> loans = loanService.getAll()
+        render view: 'allLoans', model: [loanList: loans]
+    }
+
+    def loanRequest(){
+        Loan loan  = Loan.findById(params.loanId)
+        render view: 'loan', model: [loan: loan]
+    }
+
+    @Secured('ROLE_ADMIN')
+    def update(){
+        loanService.update(params)
+        List<Loan> loans = loanService.getAll()
+        render view: 'allLoans', model: [loanList: loans]
+    }
+
+    @Secured('ROLE_ADMIN')
+    def acceptLoan(){
+        loanService.accept(params.id)
+        List<Loan> loans = loanService.getAll()
+        render view: 'allLoans', model: [loanList: loans]
+    }
+
+    @Secured('ROLE_ADMIN')
+    def rejectLoan(){
+        loanService.reject(params.id)
+        List<Loan> loans = loanService.getAll()
+        render view: 'allLoans', model: [loanList: loans]
+    }
+    @Secured('ROLE_ADMIN')
+    def deactivateLoan(){
+        loanService.deactivateLoan(params.id)
+        List<Loan> loans = loanService.getAll()
+        render view: 'allLoans', model: [loanList: loans]
+    }
+    @Secured('ROLE_ADMIN')
+    def activateLoan(){
+        loanService.activateLoan(params.id)
+        List<Loan> loans = loanService.getAll()
+        render view: 'allLoans', model: [loanList: loans]
     }
 }

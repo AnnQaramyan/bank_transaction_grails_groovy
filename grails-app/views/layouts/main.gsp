@@ -1,4 +1,4 @@
-<!doctype html>
+    <!doctype html>
 <html lang="en" class="no-js">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -39,6 +39,12 @@
                     </sec:ifAnyGranted>
                     <sec:ifAnyGranted roles="ROLE_ADMIN">
                         <li class="nav-item"><g:link controller="admin" action="transactionRequests"><input type="button" name="fourthInNav" class="btn btn-dark" value="Transaction Requests"></g:link></li>
+                    </sec:ifAnyGranted>
+                    <sec:ifAnyGranted roles="ROLE_USER">
+                        <li class="nav-item"><g:link controller="loan" action="userLoans"><input type="button" name="secondInNav" class="btn btn-dark" value="My Loans"></g:link></li>
+                    </sec:ifAnyGranted>
+                    <sec:ifAnyGranted roles="ROLE_ADMIN">
+                        <li class="nav-item"><g:link controller="admin" action="getAllLoans"><input type="button" name="secondInNav" class="btn btn-dark" value="Loans"></g:link></li>
                     </sec:ifAnyGranted>
                     <li class="nav-item"><g:link controller="logout" action="logout"><input type="button" class="btn btn-dark" value="Log Out"></g:link></li>
 

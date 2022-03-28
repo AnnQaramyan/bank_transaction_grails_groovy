@@ -10,6 +10,7 @@ import grailstestapp.dto.transaction.TransactionAdminModel
 class AccountController {
     SpringSecurityService springSecurityService
     def accountService
+
     def transactionService
     @Secured('ROLE_USER')
     def userAccounts(){
@@ -87,6 +88,7 @@ class AccountController {
         Long id = Long.valueOf(params.id)
         render accountService.deActivate(id,currentUser.id)
     }
+
     @Secured("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     def activate(){
         User currentUser = springSecurityService.currentUser as User
