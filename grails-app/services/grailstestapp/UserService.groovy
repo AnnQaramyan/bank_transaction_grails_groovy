@@ -29,7 +29,7 @@ class UserService {
         adding.getAddress().setLastUpdated(now);
         adding.setIsActive(true);
         User added = adding.save();
-        UserRole.create(adding,Role.findByAuthority('ROLE_ADMIN'),true)
+        UserRole.create(adding,Role.findByAuthority('ROLE_USER'),true)
 
         return UserConverter.userToResponse(added);
     }

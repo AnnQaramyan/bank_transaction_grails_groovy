@@ -6,7 +6,7 @@ class Loan {
     User user
     String description
     Mortgage mortgage
-    Map<User, Double> investors
+    Map<String, Double> investors
     Status status
     boolean isActive
     Date dueDate

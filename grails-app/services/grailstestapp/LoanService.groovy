@@ -49,6 +49,36 @@ class LoanService {
             loan.mortgage.valid = false
             loan.status = Status.PENDING
         }
+
+        Double sum = 0
+        params.loan.investors.each {
+            Account cur_investor = Account.findByNumber(it)
+            Double curr_perc = Math.random()
+            if (cur_investor.permittedInvestmentAmount / loan.amount < 0.001)
+                curr_perc = 1.0
+            loan.investors.put(it, curr_perc)
+            sum += cur_investor.permittedInvestmentAmount * curr_perc
+        }
+        while (sum < loan.amount){
+            sum = 0
+            loan.investors.each {
+                Account cur_investor = Account.findByNumber(it.key)
+                it.value = (it.value + Math.random() / 10) % 1
+                sum += cur_investor.permittedInvestmentAmount * it.value
+            }
+        }
+        Double leftover = sum - loan.amount
+        if (leftover > 0) {
+            Double part = leftover/sum
+            loan.investors.each {
+                Account cur_investor = Account.findByNumber(it.key)
+                Double investor_amount = it.value * cur_investor.permittedInvestmentAmount
+                Double investor_leftover = part * investor_amount
+                Double target_amount = investor_amount - investor_leftover
+                it.value = target_amount
+                cur_investor.permittedInvestmentAmount -= target_amount
+            }
+        }
         return (loan.save(flush : true))
     }
 
@@ -75,5 +105,12 @@ class LoanService {
         Loan loan = Loan.findById(id)
         loan.isActive = true
         return (loan.save(flush : true))
+    }
+
+
+    List<Account> getPotentialInvestors(def loanId){
+        Loan loan = Loan.findById(loanId)
+        List<Account> investors = Account.findAll {permittedInvestmentAmount >= 0}
+        return investors
     }
 }

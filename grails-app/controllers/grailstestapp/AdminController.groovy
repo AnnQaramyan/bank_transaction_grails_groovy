@@ -139,7 +139,8 @@ class AdminController {
 
     def loanRequest(){
         Loan loan  = Loan.findById(params.loanId)
-        render view: 'loan', model: [loan: loan]
+        List<Account> potential_investors = loanService.getPotentialInvestors(params.loanId)
+        render view: 'loan', model: [loan: loan, potential_investors: potential_investors]
     }
 
     @Secured('ROLE_ADMIN')

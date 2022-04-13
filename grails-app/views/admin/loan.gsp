@@ -37,7 +37,7 @@
             <hr>
             <h4>Loan User</h4> <br>
             <h6> ${loan.user.firstName}  ${loan.user.lastName} ,</h6> <br>
-            <h6>Email: ${loan.user.username}, </h6>`
+            <h6>Email: ${loan.user.username} </h6>
             <hr>
             <h4>Mortgage</h4>
             <h6>Collateral Type : <g:if test="${loan.isActive}">
@@ -68,7 +68,7 @@
         <div class="form-group">
             <table class="table table-bordered table-hover">
                     <thead>
-                        <th>Investor</th>
+                    <th>Investor</th>
                     <th>Invested Amount</th>
                     <th>Invested Percent</th>
                     <th>Return Amount</th>
@@ -76,10 +76,10 @@
                     <tbody>
                         <g:each in="${loan.investors}">
                             <tr>
-                                <td>${it.key.username}</td>
+                                <td>${it.key}</td>
                                 <td>${it.value}</td>
-                                <td>...</td>
-                                <td>...</td>
+                                <td>${}</td>
+                                <td>${it.value}</td>
                             </tr>
                         </g:each>
                     </tbody>
@@ -87,10 +87,10 @@
         </div>
             <hr>
             <div class="form-group">
-                <label for="investors">Potential Invsetors</label><br>
-                <select name="investors" id="investors" class="form-select" multiple>
+                <label for="loan.investors">Potential Investors</label><br>
+                <select name="loan.investors" id="loan.investors" class="form-select" multiple>
                     <g:each in="${potential_investors}">
-                        <option value="${it.usename}"></option>
+                        <option value="${it.number}">${it.number}</option>
                     </g:each>
                 </select>
             </div>
