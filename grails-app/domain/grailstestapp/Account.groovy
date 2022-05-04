@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne
 class Account {
     String number;
     Currency currency;
-    Long permittedInvestmentAmount;
+    Long permittedInvestmentAmount; // TODO (Make this double)
     Date dateCreated;
     Date lastUpdated;
     Status status;

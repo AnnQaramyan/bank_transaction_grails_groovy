@@ -38,4 +38,10 @@ class LoanController {
     }
     def index() { }
 
+    @Secured('ROLE_USER')
+    def loanDetails(){
+        Loan loan  = Loan.findById(params.loanId)
+        render view: 'loanDetails', model: [loan : loan]
+    }
+
 }

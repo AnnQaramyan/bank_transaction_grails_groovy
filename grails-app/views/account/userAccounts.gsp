@@ -26,6 +26,7 @@
             <th scope="col">Status</th>
             <th scope="col">Activation Status</th>
             <th scope="col">Balance</th>
+            <th scope="col">Permitted Investment</th>
         </tr>
         </thead>
         <tbody id="userAccountsTableBody">

@@ -75,7 +75,7 @@ class TransactionService {
         else
             paramsTo = transactionUserRequestModel.to
         if (Account.findByNumber(transactionUserRequestModel.from).getUser().getId() != currentUser.id) {
-            throw new RuntimeException("You can use only your accounts");
+            throw new RuntimeException("You can use only your accounts")
         } else if (Account.findByNumber(transactionUserRequestModel.from).getStatus() != Status.ACCEPTED
                 || Account.findByNumber(paramsTo).getStatus() != Status.ACCEPTED
                 || !Account.findByNumber(transactionUserRequestModel.from).isActive

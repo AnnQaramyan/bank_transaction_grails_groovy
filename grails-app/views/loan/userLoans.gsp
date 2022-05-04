@@ -28,6 +28,7 @@
             <th scope="col">Mortgages</th>
             <th scope="col">Due Date</th>
             <th scope="col">Accepted Date</th>
+            <th scope="col">Inspect</th>
         </tr>
         </thead>
         <tbody id="userLoansTableBody">

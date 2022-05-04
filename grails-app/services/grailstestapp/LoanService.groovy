@@ -6,9 +6,11 @@ import grailstestapp.converter.LoanConverter
 import grailstestapp.dto.loan.LoanUserRequestModel
 import grailstestapp.dto.loan.LoanUserResponseModel
 import grailstestapp.dto.mortgage.MortgageUserRequestModel
+import grailstestapp.dto.transaction.TransactionUserRequestModel
 
 @Transactional
 class LoanService {
+    TransactionService transactionService
 
    List<LoanUserResponseModel> getAllByUserId(Long id, Integer max, Integer pageNumber){
        User byId = User.findById(id)
@@ -59,6 +61,14 @@ class LoanService {
             loan.investors.put(it, curr_perc)
             sum += cur_investor.permittedInvestmentAmount * curr_perc
         }
+        Double totalAmount = 0
+        loan.investors.each {
+           totalAmount += Account.findByNumber(it.value).permittedInvestmentAmount
+        }
+        if(totalAmount <= loan.amount){
+            throw new RuntimeException("Select another investors")
+        }
+
         while (sum < loan.amount){
             sum = 0
             loan.investors.each {
@@ -91,8 +101,27 @@ class LoanService {
 
     def accept(def id){
         Loan loan = Loan.findById(id)
-        loan.status = Status.ACCEPTED
-        return (loan.save(flush : true))
+        Double sum = 0;
+        loan.investors.each {
+            sum += it.value;
+        }
+        if(sum == loan.amount && loan.mortgage.valid){
+            loan.status = Status.ACCEPTED
+            loan.investors.each {
+                TransactionUserRequestModel transactionUserRequestModel = new TransactionUserRequestModel()
+                transactionUserRequestModel.amount = it.value
+                transactionUserRequestModel.type = TransactionType.DEPOSIT
+                transactionUserRequestModel.to = loan.account.number
+                transactionUserRequestModel.from = it.key
+                transactionService.add(transactionUserRequestModel)
+            }
+
+                return (loan.save(flush : true))
+        }
+        else{
+            throw new RuntimeException("Loan amount isn't enough or mortgage isn't valid, please check");
+        }
+
     }
 
     def

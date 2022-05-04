@@ -33,6 +33,7 @@ class AccountConverter {
         response.setDateCreated(account.getDateCreated());
         response.setLastUpdated(account.getLastUpdated());
         response.setStatus(account.getStatus());
+        response.setPermittedInvestmentAmount(account.permittedInvestmentAmount)
         response.setIsActive(account.isActive);
         return response;
     }

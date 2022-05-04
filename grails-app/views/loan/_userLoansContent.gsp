@@ -36,6 +36,7 @@
             </g:else>
 
         </g:if>
+            <td><a href="loanDetails?loanId=${currentItem.id}">Inspect</a></td>
 
     </tr>
 </g:each>
