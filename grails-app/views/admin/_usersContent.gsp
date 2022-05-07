@@ -1,4 +1,8 @@
 <g:each in="${usersList}" var="currentItem">
+    <g:if test="${currentItem.id == 2}">
+
+    </g:if>
+    <g:else>
     <tr>
         <td onclick="accountsTable('${currentItem.id}', '${createLink(controller: 'admin',action: 'userAccounts')}');
         document.getElementById('myModal').setAttribute('style','display:block')">${currentItem.id}</td>
@@ -28,4 +32,5 @@
         </g:else>
 
     </tr>
+    </g:else>
 </g:each>

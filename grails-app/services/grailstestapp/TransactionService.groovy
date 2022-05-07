@@ -89,7 +89,7 @@ class TransactionService {
             List<Transaction> allByUserId = Transaction.executeQuery("SELECT t FROM Transaction t WHERE t.from.user.id=(:userId) OR t.to.user.id=(:userId)", [userId: currentUser.id]) as List<Transaction>;
             List<Account> curAccount = new ArrayList<>();
             curAccount.add(Account.findByNumber(transactionUserRequestModel.from));
-            if (getBalance(allByUserId, curAccount).get(0) - transactionUserRequestModel.amount < 0) {
+            if (getBalance(allByUserId, curAccount, 0).get(0) - transactionUserRequestModel.amount < 0) {
                 throw new RuntimeException("Not enough balance");
             }
         }
@@ -175,7 +175,7 @@ class TransactionService {
                 List<Transaction> allByUserId = Transaction.executeQuery("SELECT t FROM Transaction t WHERE t.from.user.id=(:userId) OR t.to.user.id=(:userId)", [userId: userId]) as List<Transaction>;
                 List<Account> curAccount = new ArrayList<>();
                 curAccount.add(Account.findByNumber(transactionUserRequestModel.to));
-                if (getBalance(allByUserId, curAccount).get(0) - transactionUserRequestModel.amount < 0) {
+                if (getBalance(allByUserId, curAccount, 0).get(0) - transactionUserRequestModel.amount < 0) {
                     throw new RuntimeException("Not enough balance");
                 }
             }

@@ -21,7 +21,7 @@
 <div class="container col-md-6">
     <h2>Create Transaction</h2>
     <div class="form-group">
-        <label for="type">Currency</label><br>
+        <label for="type">Transaction type</label><br>
         <select name="type" class="form-select" onchange="createToInput()">
             <option value="DEPOSIT">DEPOSIT</option>
             <option value="WITHDRAWAL">WITHDRAWAL</option>

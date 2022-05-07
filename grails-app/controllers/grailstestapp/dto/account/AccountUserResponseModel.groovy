@@ -9,7 +9,7 @@ import java.util.Date;
 public class AccountUserResponseModel {
 
     Long id;
-    Long permittedInvestmentAmount;
+    Double permittedInvestmentAmount;
     String number;
     Currency currency;
     Date dateCreated;

@@ -15,23 +15,25 @@
             <td>${balanceList[index]}</td>
         </g:if>
         <g:else>
-            <td></td>
+            <td>-</td>
         </g:else>
         <td>
+    <g:if test="${currentItem.status == grailstestapp.Status.ACCEPTED}">
+        <g:form name="updateAccount" class="onboarding-form" id="updateAccount"
+                url="[controller: 'account', action: 'updatePermitted']"
+                method="POST" autocomplete="off">
+            <div class="form-group" style="display: inline-flex; ">
 
-            <g:form name="updateAccount" class="onboarding-form" id="updateAccount"
-                    url="[controller: 'account', action: 'updatePermitted']"
-                    method="POST" autocomplete="off">
-                <div class="form-group" style="display: inline-flex; ">
+                <input type="hidden" name="account.id" id="account.id"
+                       value="${currentItem.id}">
+                <input type="number" name="account.permittedInvestmentAmount" id="account.permittedInvestmentAmount"
+                       value="${currentItem.permittedInvestmentAmount}"><br>
+                <button style="margin-left: 5px" type="submit" class="btn btn-primary">Update</button>
+            </div>
 
-                    <input type="hidden" name="account.id" id="account.id"
-                           value="${currentItem.id}">
-                    <input type="number" name="account.permittedInvestmentAmount" id="account.permittedInvestmentAmount"
-                           value="${currentItem.permittedInvestmentAmount}"><br>
-                    <button style="margin-left: 5px" type="submit" class="btn btn-primary">Update</button>
-                </div>
-
-            </g:form>
+        </g:form>
+    </g:if>
+            <g:else>-</g:else>
 
         </td>
         <g:if test="${currentItem.status == grailstestapp.Status.PENDING}">
