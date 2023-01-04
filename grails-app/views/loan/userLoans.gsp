@@ -14,8 +14,7 @@
 </head>
 
 <body>
-<div id="mainDiv" style="width: 99%">
-    <g:link controller="loan" action="loanCreation"><input type="button" class="btn btn-warning" value="Create Loan Request"></g:link>
+<div class="container">
     <table class="table table-bordered table-hover">
         <thead>
         <tr>
@@ -35,6 +34,9 @@
         <g:render template="userLoansContent" model="${loanList}, ${page}"/>
         </tbody>
     </table>
+<hr>
+    <g:link controller="loan" action="loanCreation"><input type="button" class="btn btn-warning" value="Create Loan Request"></g:link>
+
 </div>
 %{--<div id="paginationNav">
     <g:if test="${count>1}">

@@ -16,7 +16,7 @@ class ExchangeService {
             isNull('end_date')
         }
         Double toAmount = (Double)toRate.amount[0]
-        def countedAmount = amount*fromAmount/toAmount
+        def countedAmount = (amount * fromAmount)/ toAmount
         return countedAmount
     }
 }

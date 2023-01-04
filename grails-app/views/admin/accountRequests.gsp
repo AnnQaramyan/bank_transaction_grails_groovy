@@ -15,7 +15,7 @@
 </head>
 
 <body>
-<div id="mainDiv" style="width: 99%">
+<div class="container">
     <table class="table table-bordered table-hover">
         <thead>
         <tr>

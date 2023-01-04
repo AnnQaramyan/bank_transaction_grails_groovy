@@ -46,10 +46,8 @@ class LoanService {
         loan.mortgage.valid = params.loan.mortgage.valid == "on"
         if (params.loan.mortgage.valid == "on") {
             loan.mortgage.valid = true
-            loan.status = Status.ACCEPTED
         }else {
             loan.mortgage.valid = false
-            loan.status = Status.PENDING
         }
 
         Double sum = 0
@@ -63,7 +61,7 @@ class LoanService {
         }
         Double totalAmount = 0
         loan.investors.each {
-           totalAmount += Account.findByNumber(it.value).permittedInvestmentAmount
+           totalAmount += Account.findByNumber(it.key).permittedInvestmentAmount
         }
         if(totalAmount <= loan.amount){
             throw new RuntimeException("Select another investors")
@@ -89,7 +87,7 @@ class LoanService {
                 cur_investor.permittedInvestmentAmount -= target_amount
             }
         }
-        return (loan.save(flush : true))
+            return (loan.save(flush : true))
     }
 
     def reject(def id){
@@ -102,44 +100,41 @@ class LoanService {
     def accept(def id){
         Loan loan = Loan.findById(id)
         Double sum = 0;
+        if (!loan.investors.isEmpty() && loan.mortgage.valid && loan.mortgage.estimatedPrice >= loan.amount) {
+            loan.status = Status.ACCEPTED
+            return (loan.save(flush : true))
+        }else {
+            throw new RuntimeException("Investors isn't exist or mortgage isn't valid or Estimated price less then loan amount");
+        }
+    }
+
+    def activateLoan(def id){
+        Loan loan = Loan.findById(id)
+        Double sum = 0;
         loan.investors.each {
             sum += it.value;
         }
-        if(sum == loan.amount && loan.mortgage.valid){
+        if(Math.abs(sum - loan.amount) < 0.001 && loan.mortgage.valid){
             loan.status = Status.ACCEPTED
             loan.investors.each {
                 TransactionUserRequestModel transactionUserRequestModel = new TransactionUserRequestModel()
                 transactionUserRequestModel.amount = it.value
-                transactionUserRequestModel.type = TransactionType.DEPOSIT
+                transactionUserRequestModel.type = TransactionType.EXCHANGE
                 transactionUserRequestModel.to = loan.account.number
                 transactionUserRequestModel.from = it.key
                 transactionService.add(transactionUserRequestModel)
             }
+            loan.isActive = true
 
-                return (loan.save(flush : true))
+            return (loan.save(flush : true))
         }
-        else{
-            throw new RuntimeException("Loan amount isn't enough or mortgage isn't valid, please check");
-        }
-
-    }
-
-    def
-    deactivateLoan(def id){
-        Loan loan = Loan.findById(id)
-        loan.isActive = false
-        return (loan.save(flush : true))
-    }
-    def activateLoan(def id){
-        Loan loan = Loan.findById(id)
-        loan.isActive = true
         return (loan.save(flush : true))
     }
 
 
     List<Account> getPotentialInvestors(def loanId){
         Loan loan = Loan.findById(loanId)
-        List<Account> investors = Account.findAll {permittedInvestmentAmount >= 0}
+        List<Account> investors = Account.findAll {permittedInvestmentAmount >= 0 && status == Status.ACCEPTED && isActive }
         return investors
     }
 }

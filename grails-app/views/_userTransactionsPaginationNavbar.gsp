@@ -1,4 +1,16 @@
-<nav aria-label="Page navigation example">
+<style>
+.flex-container {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+
+<div class="flex-container">
+<nav aria-label="Page navigation example" style="text-align: center">
     <ul class="pagination">
         <li class="page-item" <g:if test="${page!=1}">onclick="fetchUserTransactionsWithOffset(${page-1})</g:if>"><a class="page-link">Previous</a></li>
         <g:if test="${page>2}">
@@ -19,3 +31,4 @@
         <li class="page-item" <g:if test="${page!=count}">onclick="fetchUserTransactionsWithOffset(${page+1})"</g:if>><a class="page-link">Next</a></li>
     </ul>
 </nav>
+</div>

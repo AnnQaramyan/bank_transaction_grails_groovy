@@ -14,8 +14,7 @@
 </head>
 
 <body>
-<div id="mainDiv" style="width: 99%">
-    <g:link controller="account" action="create"><input type="button" class="btn btn-warning" value="Create Account"></g:link>
+<div class="container">
     <table class="table table-bordered table-hover">
         <thead>
         <tr>
@@ -33,6 +32,8 @@
             <g:render template="userAccountsContent" model="${accountList}, ${balanceList}, ${page}"/>
         </tbody>
     </table>
+    <hr>
+    <g:link controller="account" action="create"><input type="button" class="btn btn-warning" value="Create Account"></g:link>
 </div>
 <div id="paginationNav">
     <g:if test="${count>1}">

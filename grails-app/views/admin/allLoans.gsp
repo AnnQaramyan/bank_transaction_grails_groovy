@@ -14,7 +14,7 @@
 </head>
 
 <body>
-<div id="mainDiv" style="width: 99%">
+<div class="container">
   <table class="table table-bordered table-hover">
     <thead>
     <tr>
@@ -24,13 +24,13 @@
       <th scope="col">Mortgage</th>
       <th scope="col">Loan Amount</th>
       <th scope="col">Mortgage Estimation</th>
-      <th scope="col">Due Date</th>
       <th scope="col">Created Date</th>
       <th scope="col">Accepted Date</th>
+%{--      <th scope="col">Due Date</th>--}%
       <th scope="col">Activation  Status</th>
-      <th scope="col">Accept</th>
-      <th scope="col">Reject</th>
-      <th scope="col">Inspect</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+      <th scope="col"></th>
     </tr>
     </thead>
     <tbody id="userLoansTableBody">

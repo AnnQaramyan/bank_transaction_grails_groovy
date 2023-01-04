@@ -16,23 +16,22 @@
 </head>
 
 <body>
-<div id="mainDiv" style="width: 99%">
-    <div class="header-search">
+<div class="container">
+    <div class="row">
         <g:form>
-            <g:textField name="search" class="search-field" placeholder="search"/>
-            <select name="filter_by"  class="selectpicker"onchange="createToInput()">
-                <option value="first_name">First Name</option>
-                <option value="last_name">Last Name</option>
-                <option value="email">Email</option>
-                <option value="date_created">Date Created</option>
-                <option value="last_updated">Last Updated</option>
-                <option value="act_status">Activation Status</option>
-            </select>
-            <br>
-            <button type="button" class="btn btn-primary" onclick="filter(document.getElementsByName('search')[0].value, document.getElementsByName('filter_by')[0].value)"><i class="fa fa-search fa-lg"></i>Filter</button>
-            <br>
-            <br>
-
+            <button type="button" style="float: right" class="btn btn-primary" onclick="filter(document.getElementsByName('search')[0].value, document.getElementsByName('filter_by')[0].value)"><i class="fa fa-search fa-lg"></i>Filter</button>
+            <label>Filter by anything: <g:textField name="search"  class="search-field" placeholder="search"/></label>
+            <label>
+                <select name="filter_by"  class="selectpicker" style="padding: 3px 5px" onchange="createToInput()">
+                    <option value="first_name">First Name</option>
+                    <option value="last_name">Last Name</option>
+                    <option value="email">Email</option>
+                    <option value="date_created">Date Created</option>
+                    <option value="last_updated">Last Updated</option>
+                    <option value="act_status">Activation Status</option>
+                </select>
+            </label>
+            <hr>
         </g:form>
 
     </div>
@@ -56,6 +55,7 @@
             <g:render template="usersContent" model="${usersList}"/>
         </tbody>
     </table>
+
 </div>
 <div id="paginationNav">
     <g:if test="${count>1}">

@@ -16,12 +16,9 @@
 
 <body>
 
-<div id="mainDiv" style="width: 60%">
+<div class="container">
 
         <div class="row">
-            <div class="col-md-4">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIsAYqLUZ-fKMM37Nk4LahvH_gLXxkZhPv4A&usqp=CAU">
-            </div>
             <div class="col-md-8">
                 <h4>Loan</h4>
                 <div class="form-group">

@@ -16,14 +16,11 @@
 
 <body>
 
-<div id="mainDiv" style="width: 60%">
+<div class="container">
 
     <g:form name="updateLoanRequestForm" class="onboarding-form" id="updateLoanRequestForm" url="[controller: 'admin', action: 'update']"
             method="POST" autocomplete="off">
     <div class="row">
-        <div class="col-md-4">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIsAYqLUZ-fKMM37Nk4LahvH_gLXxkZhPv4A&usqp=CAU">
-        </div>
         <div class="col-md-8">
             <h4>Loan</h4>
             <h6>Loan ID : ${loan.id} </h6>

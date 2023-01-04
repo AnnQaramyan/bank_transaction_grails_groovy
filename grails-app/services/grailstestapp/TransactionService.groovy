@@ -74,7 +74,7 @@ class TransactionService {
         }
         else
             paramsTo = transactionUserRequestModel.to
-        if (Account.findByNumber(transactionUserRequestModel.from).getUser().getId() != currentUser.id) {
+        if (Account.findByNumber(transactionUserRequestModel.from).getUser().getId() != currentUser.id && currentUser.getAuthority() != "ROLE_ADMIN") {
             throw new RuntimeException("You can use only your accounts")
         } else if (Account.findByNumber(transactionUserRequestModel.from).getStatus() != Status.ACCEPTED
                 || Account.findByNumber(paramsTo).getStatus() != Status.ACCEPTED
@@ -93,13 +93,6 @@ class TransactionService {
                 throw new RuntimeException("Not enough balance");
             }
         }
-//        TransactionUserRequestModel requestModel = new TransactionUserRequestModel()
-//        TransactionType type = TransactionType.valueOf(params.types)
-//        requestModel.setType(type)
-//        requestAmount = Double.valueOf(params.amount)
-//        requestModel.setAmount(requestAmount)
-//        requestModel.setFrom(params.accs)
-//        requestModel.setTo(paramsTo)
 
         Transaction adding = TransactionConverter.requestToTransaction(transactionUserRequestModel);
         adding.setFrom(Account.findByNumber(transactionUserRequestModel.getFrom()));

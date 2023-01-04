@@ -15,7 +15,7 @@
 </head>
 
 <body>
-<div id="mainDiv" style="width: 99%">
+<div class="container">
     <table class="table table-bordered table-hover">
         <thead>
         <tr>
@@ -35,11 +35,10 @@
             <g:render template="transactionRequestsContent" model="${transactionsList}"/>
         </tbody>
     </table>
-</div>
-<div id="paginationNav">
-    <g:if test="${count>1}">
-        <g:render template="../transactionsPaginationNavbar" model="${count}, ${page}"/>
-    </g:if>
+
+        <g:if test="${count>1}">
+            <g:render template="../transactionsPaginationNavbar" model="${count}, ${page}"/>
+        </g:if>
 </div>
 </body>
 </html>

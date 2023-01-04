@@ -732,7 +732,6 @@ async function activateAcceptedLoan(loan_id,bt) {
             deactivationTd.innerHTML = 'Active';
             bt.setAttribute('class','btn btn-secondary');
             bt.setAttribute('value', 'Deactivate');
-            bt.setAttribute('onclick', `deactivateAcceptedLoan(${loan_id},this)`);
             let lUpd = parTr.children[4];
             let now = new Date()
             lUpd.innerHTML=now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate()

@@ -15,8 +15,7 @@
 </head>
 
 <body>
-<g:link controller="transaction" action="create"><input type="button" class="btn btn-warning" value="Create Transaction"></g:link>
-<div id="mainDiv" style="width: 99%">
+<div class="container">
     <table class="table table-bordered table-hover">
         <thead>
         <tr>
@@ -35,11 +34,12 @@
             <g:render template="userTransactionsContent" model="${transactionList}, ${page}"/>
         </tbody>
     </table>
+    <hr>
+    <g:link controller="transaction" action="create"><input type="button" class="btn btn-warning" value="Create Transaction"></g:link>
+
 </div>
-<div id="paginationNav">
     <g:if test="${count>1}">
         <g:render template="../userTransactionsPaginationNavbar" model="${count}, ${page}"/>
     </g:if>
-</div>
 </body>
 </html>

@@ -15,12 +15,13 @@ class AdminController {
     def transactionService
     def loanService
     SpringSecurityService springSecurityService
-
+    long items_page = 5
+    
     def accountRequests() {
         List<AccountAdminModel> requests = accountService.getAll(0)
         Integer count = accountService.getCount()
-        if (count % 5 == 0) count = count / 5 else {
-            count = count / 5 + 1
+        if (count % items_page == 0) count = count / items_page else {
+            count = count / items_page + 1
         }
         render view: 'accountRequests', model: ['requestsList': requests, 'count': count, page: 1]
     }
@@ -34,8 +35,8 @@ class AdminController {
     def accountsPaginationNavbar() {
         Integer pageNumber = Integer.valueOf(params.page)
         Integer count = accountService.getCount()
-        if (count % 5 == 0) count = count / 5 else {
-            count = count / 5 + 1
+        if (count % items_page == 0) count = count / items_page else {
+            count = count / items_page + 1
         }
         render template: '../accountsPaginationNavbar', model: ['page': pageNumber, 'count': count]
     }
@@ -45,7 +46,7 @@ class AdminController {
 
         if (params.search != null) {
 
-            users = UserConverter.usersToAdminModels(User.findAll(max:5, offset:page_number*5))
+            users = UserConverter.usersToAdminModels(User.findAll(max:items_page, offset:page_number*items_page))
             def filters = new UserFilters( params.search, params.filter_by)
            // users = userService.getUsers(filters, page_number)
             users = userService.getUsers(filters, page_number)
@@ -63,8 +64,8 @@ class AdminController {
         }else{
             count = userService.getCount()
         }
-        if (count % 5 == 0) count = count / 5 else {
-            count = count / 5 + 1
+        if (count % items_page == 0) count = count / items_page else {
+            count = count / items_page + 1
         }
         render view: 'users', model: ['usersList': users, 'count': count, 'page': 1]
     }
@@ -78,8 +79,8 @@ class AdminController {
     def usersPaginationNavbar() {
         //Integer pageNumber = Integer.valueOf(params.page)
         Integer count = userService.getCount()
-        if (count % 5 == 0) count = count / 5 else {
-            count = count/5+1
+        if (count % items_page == 0) count = count / items_page else {
+            count = count/items_page+1
         }
         render template: '../usersPaginationNavbar', model: ['page':1, 'count':count]
     }
@@ -87,10 +88,10 @@ class AdminController {
     def transactionRequests(){
         List<TransactionAdminModel> transactions = transactionService.getAll(0)
         Integer count = transactionService.getCount()
-        if(count%5==0)
-            count = count/5
+        if(count%items_page==0)
+            count = count/items_page
         else{
-            count = count/5+1
+            count = count/items_page+1
         }
         render view: 'transactionRequests', model: ['transactionsList':transactions, 'count':count, 'page':1]
     }
@@ -103,10 +104,10 @@ class AdminController {
     def transactionsPaginationNavbar(){
         Integer pageNumber = Integer.valueOf(params.page)
         Integer count = transactionService.getCount()
-        if(count%5==0)
-            count = count/5
+        if(count%items_page==0)
+            count = count/items_page
         else{
-            count = count/5+1
+            count = count/items_page+1
         }
         render template: '../transactionsPaginationNavbar', model: ['page':pageNumber, 'count':count]
     }

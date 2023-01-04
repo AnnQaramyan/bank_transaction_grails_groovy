@@ -1,8 +1,8 @@
 function createToInput(){
     let typeSelect = document.getElementsByName('type')[0];
     if(typeSelect.value == 'EXCHANGE'){
-        let mainDiv = document.getElementsByClassName('container')[0];
-        let btn = document.getElementsByClassName('btn')[0];
+        let mainDiv = document.getElementById('create_tr_cont');
+        let btn = document.getElementById('create_btn');
 
         let toDiv = document.createElement('div');
         toDiv.setAttribute('id','toAcc');
